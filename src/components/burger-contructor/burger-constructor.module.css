@@ -1,7 +1,48 @@
-.burger_constructor {
+.view__list {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 40px 0;
+  overflow: auto;
+}
+
+.burger__constructor {
   display: flex;
   flex-direction: column;
   width: 600px;
   padding-bottom: 20px;
   color: var(--text-primary-color);
+}
+
+.constructor__list {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.components__list {
+  position: relative;
+}
+
+.component {
+  position: relative;
+}
+
+.drag__icon {
+  position: relative;
+}
+
+.order {
+  position: relative;
+}
+
+.order__total {
+  position: relative;
+}
+
+.order__sum {
+  position: relative;
 }
