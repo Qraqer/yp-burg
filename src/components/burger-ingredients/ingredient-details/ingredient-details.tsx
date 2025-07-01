@@ -40,7 +40,7 @@ export const IngredientDetails = ({
       <ul className={styles.details__nutrition}>
         {nutrition.map((item) => (
           <li
-            className={`text text_type_main-default ${styles.details__prop}`}
+            className={`text text_type_main-default text_color_inactive ${styles.details__prop}`}
             key={item.value}
           >
             <div className={styles.details__label}>{item.name}</div>

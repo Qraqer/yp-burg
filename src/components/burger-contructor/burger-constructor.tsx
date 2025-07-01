@@ -22,30 +22,24 @@ export const BurgerConstructor = ({
 }: TBurgerConstructorProps): React.JSX.Element => {
   const [orderModal, setOrderModal] = useState(false);
 
-  let bun: TIngredient;
-  const condiments: TIngredient[] = [];
-
-  ingredients.map((item: TIngredient) => {
-    if (item.type === 'bun' && !bun) {
-      bun = item;
-    } else {
-      condiments.push(item);
-    }
-  });
+  const bun: TIngredient = ingredients.filter((item) => item.type === 'bun').shift()!;
+  const condiments: TIngredient[] = ingredients.filter((item) => item.type !== 'bun');
 
   return (
     <section className={styles.burger__constructor}>
       <div className={styles.constructor__list}>
         {!!bun && (
-          <ConstructorElement
-            type="top"
-            isLocked={true}
-            text={`${bun.name} (верх)`}
-            price={bun.price}
-            thumbnail={bun.image}
-          />
+          <div className={styles.component__fixed}>
+            <ConstructorElement
+              type="top"
+              isLocked={true}
+              text={`${bun.name} (верх)`}
+              price={bun.price}
+              thumbnail={bun.image}
+            />
+          </div>
         )}
-        <div className={styles.view__list}>
+        <div className={styles.constructor__view_list}>
           <ul className={styles.components__list}>
             {condiments.map((item) => (
               <li className={styles.component} key={item?._id}>
@@ -62,19 +56,23 @@ export const BurgerConstructor = ({
           </ul>
         </div>
         {!!bun && (
-          <ConstructorElement
-            type="bottom"
-            isLocked={true}
-            text={`${bun.name} (низ)`}
-            price={bun.price}
-            thumbnail={bun.image}
-          />
+          <div className={styles.component__fixed}>
+            <ConstructorElement
+              type="bottom"
+              isLocked={true}
+              text={`${bun.name} (низ)`}
+              price={bun.price}
+              thumbnail={bun.image}
+            />
+          </div>
         )}
       </div>
 
       <div className={styles.order}>
         <div className={styles.order__total}>
-          <style className={styles.order__sum}></style>
+          <span className={`${styles.order__sum} text text_type_digits-medium`}>
+            610
+          </span>
           <CurrencyIcon type="primary" />
         </div>
         <Button

@@ -17,6 +17,7 @@
 
 .order__success {
   position: relative;
+  margin: 60px 0;
 }
 
 .order__highlight {

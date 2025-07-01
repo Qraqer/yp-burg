@@ -11,21 +11,7 @@ import styles from './app.module.css';
 
 type IResponseData = {
   success: boolean;
-  data?: string;
-};
-
-const getIngredients = (): Promise<T> => {
-  return fetch(API)
-    .then((result) => {
-      return result.ok
-        ? Promise.resolve(result.json())
-        : Promise.reject(new Error(`Error: ${result.status}`));
-    })
-    .then((response: IResponseData) => {
-      return response.success
-        ? Promise.resolve(response)
-        : Promise.reject(new Error(response?.data ?? 'Error in response'));
-    });
+  data?: TIngredient[];
 };
 
 export const App = (): React.JSX.Element => {
@@ -35,16 +21,22 @@ export const App = (): React.JSX.Element => {
   const [selectedIngredients, setSelectedIngredients] = useState<TIngredient[]>([]);
 
   useEffect(() => {
-    getIngredients()
-      .then(({ success, data }) => {
-        if (success) {
-          setIngredients(data as TIngredient[]);
-          // TODO: delete after sprint 1 / step 2
-          setSelectedIngredients(data as TIngredient[]);
-          setError(false);
-        } else {
-          setError(true);
-        }
+    fetch(API)
+      .then((result) => {
+        return result.ok
+          ? Promise.resolve(result.json())
+          : Promise.reject(new Error(`Error: ${result.status}`));
+      })
+      .then((response: IResponseData) => {
+        return response.success
+          ? Promise.resolve(response.data!)
+          : Promise.reject(new Error('Error in response'));
+      })
+      .then((data: TIngredient[]) => {
+        setIngredients(data);
+        // TODO: delete after sprint 1 / step 2
+        setSelectedIngredients(data);
+        setError(false);
       })
       .catch((error) => {
         console.log(`Error fetching data from server: ${error}`);
