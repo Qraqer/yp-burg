@@ -1,3 +1,13 @@
+.view__list {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 40px 0;
+  overflow: auto;
+}
+
 .burger_ingredients {
   display: flex;
   flex-direction: column;
@@ -12,4 +22,25 @@
   padding: 0;
   text-align: center;
   list-style-type: none;
+}
+
+.category__list {
+  position: relative;
+  height: 100%;
+}
+
+.category__box {
+  display: flex;
+  flex-direction: column;
+}
+
+.category__title {
+  position: relative;
+}
+
+.item__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 24px 16px 40px;
 }

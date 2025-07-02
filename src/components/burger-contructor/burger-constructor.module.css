@@ -1,7 +1,76 @@
-.burger_constructor {
+.view__list {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 40px 0;
+  overflow: auto;
+}
+
+.burger__constructor {
   display: flex;
   flex-direction: column;
   width: 600px;
   padding-bottom: 20px;
+  color: var(--text-primary-color);
+}
+
+.constructor__list {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 0 0 16px;
+}
+
+.constructor__view_list {
+  position: relative;
+  flex: 1 1 auto;
+}
+
+.components__list {
+  position: relative;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.component__fixed {
+  padding: 0 24px;
+}
+
+.component {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+}
+
+.drag__icon {
+  position: relative;
+}
+
+.order {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 48px;
+  padding: 48px 24px;
+}
+
+.order__total {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.order__sum {
   color: var(--text-primary-color);
 }

@@ -1,0 +1,46 @@
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.details__img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 240px;
+}
+
+.details__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.details__name {
+  position: relative;
+}
+
+.details__nutrition {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.details__prop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 112px;
+  line-height: 24px;
+}
+
+.details__label {
+  position: relative;
+}
+
+.details__value {
+  font-size: 28px;
+}
