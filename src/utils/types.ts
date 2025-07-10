@@ -12,3 +12,23 @@ export type TIngredient = {
   image_mobile: string;
   __v: number;
 };
+
+export type IResponseData = {
+  success: boolean;
+  data?: TIngredient[];
+};
+
+export type IResponse = {
+  success: boolean;
+  message?: string;
+};
+
+export type IIngredientsResponseData = {
+  data: TIngredient[];
+} & IResponse;
+
+export type TIngredientsState = {
+  ingredients: TIngredient[] | [];
+  error: null | string;
+  loading: boolean;
+};

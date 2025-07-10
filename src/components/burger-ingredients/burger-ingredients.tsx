@@ -1,3 +1,4 @@
+import { useSelector } from '@/services/store';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 
@@ -9,15 +10,15 @@ import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
 
-type TBurgerIngredientsProps = {
-  ingredients: TIngredient[];
-};
+// type TBurgerIngredientsProps = {
+//   ingredients: TIngredient[];
+// };
 
-export const BurgerIngredients = ({
-  ingredients,
-}: TBurgerIngredientsProps): React.JSX.Element => {
+export const BurgerIngredients = (): React.JSX.Element => {
   const [currentTab, setCurrentTab] = useState('bun');
   const [currentItem, setCurrentItem] = useState<TIngredient | null>(null);
+
+  const { ingredients } = useSelector((store) => store.ingredients);
 
   const tabsList = [
     {

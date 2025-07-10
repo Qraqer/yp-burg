@@ -1,26 +1,44 @@
-import { useState, useEffect } from 'react';
+// import { API } from '@utils/constants';
+import { getIngredients } from '@/services/burger-ingredients/actions';
+// import { useSelector } from 'react-redux'
+// import { useDispatch, useSelector } from 'react-redux'
+// import { useDispatch } from '@/services/store';
+import { useDispatch } from '@/services/store';
+import { useEffect } from 'react';
 
 import { AppHeader } from '@components/app-header/app-header';
-import { BurgerConstructor } from '@components/burger-contructor/burger-constructor';
+// import { BurgerConstructor } from '@components/burger-contructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
-import { API } from '@utils/constants';
 
-import type { TIngredient } from '@utils/types';
-
+// import { getIngredients } from '@/utils/request';
+// import type { TIngredient, IResponseData } from '@utils/types';
 import styles from './app.module.css';
 
-type IResponseData = {
-  success: boolean;
-  data?: TIngredient[];
-};
-
 export const App = (): React.JSX.Element => {
-  const [ingredients, setIngredients] = useState<TIngredient[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-  const [selectedIngredients, setSelectedIngredients] = useState<TIngredient[]>([]);
+  // const [ingredients, setIngredients] = useState<TIngredient[]>([]);
+  /* useEffect(() => {
+    const i = getIngredients();
+    console.log('getIngredients', i);
+  }) */
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getIngredients());
+  }, [dispatch]);
+
+  /* const store = useSelector(store => store);
+
+  console.log('store', store); */
+
+  /* const [ingredients, setIngredients] = useState<TIngredient[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false); */
+  // const [selectedIngredients, setSelectedIngredients] = useState<TIngredient[]>([]);
+  /* const selectedIngredients: TIngredient[] = []; //useSelector(store => store.ingredients);
+  const ingredients = useSelector(store => store.ingredients);
+   */
+
+  /* useEffect(() => {
     fetch(API)
       .then((result) => {
         return result.ok
@@ -44,7 +62,7 @@ export const App = (): React.JSX.Element => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, []); */
 
   return (
     <div className={styles.app}>
@@ -52,14 +70,21 @@ export const App = (): React.JSX.Element => {
       <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
         Соберите бургер
       </h1>
-      {!loading && !error && (
-        <main className={`${styles.main} pl-5 pr-5`}>
-          <BurgerIngredients ingredients={ingredients} />
-          <BurgerConstructor ingredients={selectedIngredients} />
-        </main>
-      )}
+      <main className={`${styles.main} pl-5 pr-5`}>
+        <BurgerIngredients />
+      </main>
     </div>
   );
 };
+
+/*
+      {!loading && !error && (
+        <main className={`${styles.main} pl-5 pr-5`}>
+          
+          <BurgerConstructor ingredients={selectedIngredients} />
+        </main>
+      )}
+
+*/
 
 export default App;
