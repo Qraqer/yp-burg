@@ -32,3 +32,18 @@ export type TIngredientsState = {
   error: null | string;
   loading: boolean;
 };
+
+export type IStateOrder = {
+  bun: TIngredient | null;
+  ingredients: TIngredient[];
+  orderNumber: number | null;
+  loading: boolean;
+  error: string | null;
+};
+
+export type IOrderNumberResponse = {
+  name: string;
+  order: {
+    number: number;
+  };
+} & IResponse;

@@ -1,3 +1,5 @@
+import { loadIngredients } from '@/services/burger-ingredients/reducer';
+import { useSelector } from '@/services/store';
 import {
   Button,
   ConstructorElement,
@@ -13,22 +15,15 @@ import type { TIngredient } from '@utils/types';
 
 import styles from './burger-constructor.module.css';
 
-type TBurgerConstructorProps = {
-  ingredients: TIngredient[];
-};
-
-export const BurgerConstructor = ({
-  ingredients,
-}: TBurgerConstructorProps): React.JSX.Element => {
+export const BurgerConstructor = (): React.JSX.Element => {
+  const { ingredients } = useSelector(loadIngredients);
   const [orderModal, setOrderModal] = useState(false);
 
-  const bun: TIngredient = ingredients.filter((item) => item.type === 'bun').shift()!;
+  // const bun: TIngredient | null = null;
   const condiments: TIngredient[] = ingredients.filter((item) => item.type !== 'bun');
 
-  return (
-    <section className={styles.burger__constructor}>
-      <div className={styles.constructor__list}>
-        {!!bun && (
+  /*
+        {bun && (
           <div className={styles.component__fixed}>
             <ConstructorElement
               type="top"
@@ -39,6 +34,21 @@ export const BurgerConstructor = ({
             />
           </div>
         )}
+        {!!bun && (
+          <div className={styles.component__fixed}>
+            <ConstructorElement
+              type="bottom"
+              isLocked={true}
+              text={`${bun.name} (низ)`}
+              price={bun.price}
+              thumbnail={bun.image}
+            />
+          </div>
+        )}
+  */
+  return (
+    <section className={styles.burger__constructor}>
+      <div className={styles.constructor__list}>
         <div className={styles.constructor__view_list}>
           <ul className={styles.components__list}>
             {condiments.map((item) => (
@@ -55,17 +65,6 @@ export const BurgerConstructor = ({
             ))}
           </ul>
         </div>
-        {!!bun && (
-          <div className={styles.component__fixed}>
-            <ConstructorElement
-              type="bottom"
-              isLocked={true}
-              text={`${bun.name} (низ)`}
-              price={bun.price}
-              thumbnail={bun.image}
-            />
-          </div>
-        )}
       </div>
 
       <div className={styles.order}>
