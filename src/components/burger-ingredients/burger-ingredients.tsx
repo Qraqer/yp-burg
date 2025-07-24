@@ -1,6 +1,6 @@
 import { useSelector } from '@/services/store';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useState, useRef, useEffect /* , RefObject */ } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { Modal } from '../modal/modal';
@@ -10,10 +10,6 @@ import { IngredientItem } from './ingredient-item/ingredient-item';
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
-
-// type TBurgerIngredientsProps = {
-//   ingredients: TIngredient[];
-// };
 
 export const BurgerIngredients = (): React.JSX.Element => {
   const [currentTab, setCurrentTab] = useState('bun');
@@ -65,23 +61,6 @@ export const BurgerIngredients = (): React.JSX.Element => {
     }
   }, [inViewBun, inViewMain, inViewSauce]);
 
-  /* const scrollToCategory = (ref: RefObject<HTMLDivElement | null>): void => {
-    if (ref && ref.current) {
-      ref.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    }
-  }
-
-  const scrollBox = () => {
-    const cats = tabsList.filter((tab) => tab.thisRef && tab.thisRef.current).length === tabsList.length;
-    if (cats && refBox.current) {
-      const box = refBox.current.getBoundingClientRect();
-      const tabs
-    }
-  } */
-
   return (
     <section className={styles.burger_ingredients}>
       <nav>
@@ -91,10 +70,7 @@ export const BurgerIngredients = (): React.JSX.Element => {
               key={tab.id}
               value={tab.id}
               active={tab.id === currentTab}
-              onClick={() => {
-                setCurrentTab(tab.id);
-                /* scrollToCategory(tab.thisRef) */
-              }}
+              onClick={() => setCurrentTab(tab.id)}
             >
               {tab.name}
             </Tab>
@@ -118,7 +94,6 @@ export const BurgerIngredients = (): React.JSX.Element => {
                         key={item._id}
                         ingredient={item}
                         onClick={() => clickItem(item)}
-                        counter={0}
                       />
                     ))}
                 </div>

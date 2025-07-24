@@ -2,24 +2,24 @@ import { API_POINTS } from '@/utils/constants';
 import { request } from '@/utils/request';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import type { IOrderNumberResponse, IStateOrder } from '@/utils/types';
+import type { IOrderIdResponse, IOrderState } from '@/utils/types';
 
-export const requestOrderNumber = createAsyncThunk(
-  'burgerConstructor/requestOrderNumber',
+export const requestOrderId = createAsyncThunk(
+  'burgerConstructor/requestOrderId',
   async (_, { getState }) => {
     const {
-      order: { bun, ingredients },
-    } = getState() as { order: IStateOrder };
+      order: { orderBun, orderItems },
+    } = getState() as { order: IOrderState };
 
-    let arId = [...ingredients.map((i) => i._id)];
-    if (bun) {
-      arId = [bun._id, ...arId, bun._id];
+    let arId = [...orderItems.map((i) => i._id)];
+    if (orderBun) {
+      arId = [orderBun._id, ...arId, orderBun._id];
     }
 
     const header = new Headers();
     header.append('Content-Type', 'application/json; charset=utf-8');
 
-    const result = await request<IOrderNumberResponse>(API_POINTS.orders, {
+    const result = await request<IOrderIdResponse>(API_POINTS.orders, {
       method: 'POST',
       headers: header,
       body: JSON.stringify({

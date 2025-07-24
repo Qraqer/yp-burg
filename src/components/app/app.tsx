@@ -1,8 +1,6 @@
 import { getIngredients } from '@/services/burger-ingredients/actions';
 import { useDispatch } from '@/services/store';
 import { useEffect } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { BurgerConstructor } from '../burger-contructor/burger-constructor';
 import { AppHeader } from '@components/app-header/app-header';
@@ -24,12 +22,10 @@ export const App = (): React.JSX.Element => {
         Соберите бургер
       </h1>
       <main className={`${styles.main} pl-5 pr-5`}>
-        <DndProvider backend={HTML5Backend}>
-          <BurgerIngredients />
-          <div className="rightContent mt-25">
-            <BurgerConstructor />
-          </div>
-        </DndProvider>
+        <BurgerIngredients />
+        <div className="rightContent">
+          <BurgerConstructor />
+        </div>
       </main>
     </div>
   );

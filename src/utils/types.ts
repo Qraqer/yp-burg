@@ -13,6 +13,10 @@ export type TIngredient = {
   __v: number;
 };
 
+export type IOrderIngredient = {
+  uuid: string;
+} & TIngredient;
+
 export type IResponseData = {
   success: boolean;
   data?: TIngredient[];
@@ -33,15 +37,15 @@ export type TIngredientsState = {
   loading: boolean;
 };
 
-export type IStateOrder = {
-  bun: TIngredient | null;
-  ingredients: TIngredient[];
-  orderNumber: number | null;
-  loading: boolean;
-  error: string | null;
+export type IOrderState = {
+  orderBun: IOrderIngredient | null;
+  orderItems: IOrderIngredient[];
+  orderId: number | null;
+  orderLoading: boolean;
+  orderError: string | null;
 };
 
-export type IOrderNumberResponse = {
+export type IOrderIdResponse = {
   name: string;
   order: {
     number: number;
