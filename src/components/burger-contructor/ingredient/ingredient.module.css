@@ -3,6 +3,10 @@
   align-items: center;
 }
 
+.component__dragging {
+  opacity: 0.5;
+}
+
 .drag__icon {
   position: relative;
 }

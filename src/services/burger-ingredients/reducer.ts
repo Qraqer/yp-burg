@@ -2,20 +2,39 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { getIngredients } from './actions';
 
-import type { TIngredientsState } from '@utils/types';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { TIngredientsState, TIngredient } from '@utils/types';
 
 const initialState: TIngredientsState = {
   ingredients: [],
   error: null,
   loading: false,
+  ingredient: {
+    _id: '',
+    name: '',
+    type: '',
+    proteins: 0,
+    fat: 0,
+    carbohydrates: 0,
+    calories: 0,
+    price: 0,
+    image: '',
+    image_large: '',
+    image_mobile: '',
+    __v: 0,
+  },
 };
 
 export const burgerIngredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {},
-  selectors: {
-    loadIngredients: (state) => state,
+  reducers: {
+    showIngredient: (state, action: PayloadAction<TIngredient>) => {
+      state.ingredient = action.payload;
+    },
+    clearIngregient: (state) => {
+      state.ingredient = initialState.ingredient;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -32,4 +51,4 @@ export const burgerIngredientsSlice = createSlice({
   },
 });
 
-export const { loadIngredients } = burgerIngredientsSlice.selectors;
+export const { showIngredient, clearIngregient } = burgerIngredientsSlice.actions;

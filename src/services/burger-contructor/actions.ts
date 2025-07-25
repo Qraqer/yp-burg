@@ -4,8 +4,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import type { IOrderIdResponse, IOrderState } from '@/utils/types';
 
-export const requestOrderId = createAsyncThunk(
-  'burgerConstructor/requestOrderId',
+export const createOrder = createAsyncThunk(
+  'burgerConstructor/createOrder',
   async (_, { getState }) => {
     const {
       order: { orderBun, orderItems },

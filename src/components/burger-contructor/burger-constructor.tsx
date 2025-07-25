@@ -1,4 +1,5 @@
-import { addBun, addIngredient } from '@/services/burger-contructor/reducer';
+import { createOrder } from '@/services/burger-contructor/actions';
+import { addBun, addIngredient, resetOrder } from '@/services/burger-contructor/reducer';
 import { useDispatch, useSelector } from '@/services/store';
 import { Button, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { nanoid } from '@reduxjs/toolkit';
@@ -41,8 +42,22 @@ export const BurgerConstructor = (): React.JSX.Element => {
   drop(dropRef);
 
   const totalPrice = useMemo(() => {
-    return (bun ? bun.price * 2 : 0) + ingredients.reduce((acc, i) => acc + i.price, 0);
+    const total =
+      bun || ingredients
+        ? (bun ? bun.price * 2 : 0) + ingredients.reduce((acc, i) => acc + i.price, 0)
+        : null;
+    return total;
   }, [bun, ingredients]);
+
+  const orderCreate = (): void => {
+    dispatch(createOrder());
+    setOrderModal(true);
+  };
+
+  const closeOrderModal = (): void => {
+    dispatch(resetOrder());
+    setOrderModal(false);
+  };
 
   return (
     <section className={styles.burger__constructor} ref={dropRef}>
@@ -55,15 +70,15 @@ export const BurgerConstructor = (): React.JSX.Element => {
         {bun && <Bun bun={bun} type="top" />}
         <div className={styles.constructor__view_list}>
           <ul className={styles.components__list}>
-            {ingredients.map((item) => (
-              <Ingredient item={item} key={item?._id} />
+            {ingredients.map((item, index) => (
+              <Ingredient item={{ ...item, index }} key={item?.uuid} />
             ))}
           </ul>
         </div>
         {bun && <Bun bun={bun} type="bottom" />}
       </div>
 
-      {totalPrice && totalPrice > 0 && (
+      {totalPrice && totalPrice > 0 ? (
         <div className={styles.order}>
           <div className={styles.order__total}>
             <span className={`${styles.order__sum} text text_type_digits-medium`}>
@@ -71,19 +86,16 @@ export const BurgerConstructor = (): React.JSX.Element => {
             </span>
             <CurrencyIcon type="primary" />
           </div>
-          <Button
-            htmlType="button"
-            type="primary"
-            size="large"
-            onClick={() => setOrderModal(true)}
-          >
+          <Button htmlType="button" type="primary" size="large" onClick={orderCreate}>
             Оформить заказ
           </Button>
         </div>
+      ) : (
+        <></>
       )}
 
       {orderModal && (
-        <Modal onClose={() => setOrderModal(false)}>
+        <Modal onClose={closeOrderModal}>
           <OrderDetails />
         </Modal>
       )}

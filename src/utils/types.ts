@@ -15,6 +15,7 @@ export type TIngredient = {
 
 export type IOrderIngredient = {
   uuid: string;
+  index?: number;
 } & TIngredient;
 
 export type IResponseData = {
@@ -35,6 +36,7 @@ export type TIngredientsState = {
   ingredients: TIngredient[] | [];
   error: null | string;
   loading: boolean;
+  ingredient: TIngredient;
 };
 
 export type IOrderState = {
