@@ -12,6 +12,7 @@
   display: flex;
   flex-direction: column;
   width: 600px;
+  height: 100%;
   padding-bottom: 20px;
   color: var(--text-primary-color);
 }
@@ -23,11 +24,17 @@
   flex-direction: column;
   gap: 16px;
   padding: 0 0 0 16px;
+  border: 1px dashed transparent;
+  border-radius: 8px;
 }
 
 .constructor__view_list {
   position: relative;
   flex: 1 1 auto;
+}
+
+.components__list_hover {
+  border-color: #4c4cff;
 }
 
 .components__list {
@@ -43,13 +50,16 @@
   list-style: none;
 }
 
+.components__list_empty {
+  flex: 1 1 auto;
+}
+
 .component__fixed {
   padding: 0 24px;
 }
 
 .component {
   display: flex;
-  flex: 1 1 auto;
   align-items: center;
 }
 

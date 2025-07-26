@@ -1,15 +1,10 @@
-import type { TIngredient } from '@utils/types';
+import { useSelector } from '@/services/store';
 
 import styles from './ingredient-details.module.css';
 
-type TIngredientDetailProps = {
-  ingredient: TIngredient;
-};
+export const IngredientDetails = (): React.JSX.Element => {
+  const { ingredient } = useSelector((state) => state.ingredients);
 
-export const IngredientDetails = ({
-  ingredient,
-}: TIngredientDetailProps): React.JSX.Element => {
-  const { image_large, name } = ingredient;
   const nutrition = [
     {
       value: ingredient.calories,
@@ -32,16 +27,16 @@ export const IngredientDetails = ({
   return (
     <div className={styles.details}>
       <div className={styles.details__img}>
-        <img src={image_large} alt={name} />
+        <img src={ingredient.image_large} alt={ingredient.name} />
       </div>
       <div className={`text text_type_main-medium mb-8 ${styles.details__name}`}>
-        {name}
+        {ingredient.name}
       </div>
       <ul className={styles.details__nutrition}>
         {nutrition.map((item) => (
           <li
             className={`text text_type_main-default text_color_inactive ${styles.details__prop}`}
-            key={item.value}
+            key={item.name}
           >
             <div className={styles.details__label}>{item.name}</div>
             <div

@@ -1,5 +1,8 @@
+import { clearIngregient, showIngredient } from '@/services/burger-ingredients/reducer';
+import { useDispatch, useSelector } from '@/services/store';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
 
 import { Modal } from '../modal/modal';
 import { IngredientDetails } from './ingredient-details/ingredient-details';
@@ -9,34 +12,67 @@ import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
 
-type TBurgerIngredientsProps = {
-  ingredients: TIngredient[];
-};
-
-export const BurgerIngredients = ({
-  ingredients,
-}: TBurgerIngredientsProps): React.JSX.Element => {
+export const BurgerIngredients = (): React.JSX.Element => {
   const [currentTab, setCurrentTab] = useState('bun');
-  const [currentItem, setCurrentItem] = useState<TIngredient | null>(null);
+  // const [currentItem, setCurrentItem] = useState<TIngredient | null>(null);
+  const [showIngredientModal, setIngredientModal] = useState(false);
+  const dispatch = useDispatch();
+
+  const refBox = useRef<HTMLDivElement | null>(null);
+
+  const { ingredients } = useSelector((state) => state.ingredients);
+
+  const { ref: refBun, inView: inViewBun } = useInView({
+    threshold: 0.35,
+  });
+  const { ref: refMain, inView: inViewMain } = useInView({
+    threshold: 0.35,
+  });
+  const { ref: refSauce, inView: inViewSauce } = useInView({
+    threshold: 0.35,
+  });
 
   const tabsList = [
     {
       id: 'bun',
       name: 'Булки',
+      thisRef: refBun,
     },
     {
       id: 'main',
       name: 'Начинки',
+      thisRef: refMain,
     },
     {
       id: 'sauce',
       name: 'Соусы',
+      thisRef: refSauce,
     },
   ];
 
-  function clickItem(item: TIngredient): void {
+  /* const clickItem = (item: TIngredient): void => {
     setCurrentItem(item);
-  }
+  }; */
+
+  useEffect(() => {
+    if (inViewBun) {
+      setCurrentTab('bun');
+    } else if (inViewMain) {
+      setCurrentTab('main');
+    } else if (inViewSauce) {
+      setCurrentTab('sauce');
+    }
+  }, [inViewBun, inViewMain, inViewSauce]);
+
+  const showCurrentIngredient = (item: TIngredient): void => {
+    dispatch(showIngredient(item));
+    setIngredientModal(true);
+  };
+
+  const clearCurrentIngredient = (): void => {
+    dispatch(clearIngregient());
+    setIngredientModal(false);
+  };
 
   return (
     <section className={styles.burger_ingredients}>
@@ -47,9 +83,7 @@ export const BurgerIngredients = ({
               key={tab.id}
               value={tab.id}
               active={tab.id === currentTab}
-              onClick={() => {
-                setCurrentTab(tab.id);
-              }}
+              onClick={() => setCurrentTab(tab.id)}
             >
               {tab.name}
             </Tab>
@@ -58,10 +92,10 @@ export const BurgerIngredients = ({
       </nav>
 
       <section className={styles.category__list}>
-        <div className={styles.view__list}>
+        <div className={styles.view__list} ref={refBox}>
           {tabsList.map((tab) => {
             return (
-              <div className={styles.category__box} key={tab.id}>
+              <div className={styles.category__box} key={tab.id} ref={tab.thisRef}>
                 <h2 className={`text text_type_main-medium ${styles.category__title}`}>
                   {tab.name}
                 </h2>
@@ -72,8 +106,7 @@ export const BurgerIngredients = ({
                       <IngredientItem
                         key={item._id}
                         ingredient={item}
-                        onClick={() => clickItem(item)}
-                        counter={0}
+                        onClick={() => showCurrentIngredient(item)}
                       />
                     ))}
                 </div>
@@ -83,9 +116,9 @@ export const BurgerIngredients = ({
         </div>
       </section>
 
-      {currentItem && (
-        <Modal title="Детали ингредиента" onClose={() => setCurrentItem(null)}>
-          <IngredientDetails ingredient={currentItem} />
+      {showIngredientModal && (
+        <Modal title="Детали ингредиента" onClose={clearCurrentIngredient}>
+          <IngredientDetails />
         </Modal>
       )}
     </section>
