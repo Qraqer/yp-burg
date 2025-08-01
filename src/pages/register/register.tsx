@@ -1,12 +1,14 @@
 import {
   Button,
   EmailInput,
+  Input,
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export const Login = (): React.JSX.Element => {
+export const Register = (): React.JSX.Element => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -14,7 +16,13 @@ export const Login = (): React.JSX.Element => {
     <>
       <main className={`section-center main pl-5 pr-5`}>
         <form className={`form`}>
-          <h3>Вход</h3>
+          <h3>Регистрация</h3>
+          <Input
+            name={'name'}
+            value={name}
+            placeholder={'Имя'}
+            onChange={(e) => setName(e.target.value)}
+          />
           <EmailInput
             name={'email'}
             value={email}
@@ -31,22 +39,16 @@ export const Login = (): React.JSX.Element => {
             htmlType="submit"
             type="primary"
             size="medium"
-            disabled={!(email && password)}
+            disabled={!(email && password && name)}
           >
-            Войти
+            Зарегистрироваться
           </Button>
         </form>
         <div className="form__links">
           <div className="form__link">
-            <span>Вы — новый пользователь?</span>
-            <Link to={'/register'} className={'link'}>
-              Зарегистрироваться
-            </Link>
-          </div>
-          <div className="form__link">
-            <span>Забыли пароль?</span>
-            <Link to={'/forgot-password'} className={'link'}>
-              Восстановить пароль
+            <span>Уже зарегистрированы?</span>
+            <Link to={'/login'} className={'link'}>
+              Войти
             </Link>
           </div>
         </div>

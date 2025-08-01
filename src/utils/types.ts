@@ -53,3 +53,7 @@ export type IOrderIdResponse = {
     number: number;
   };
 } & IResponse;
+
+export type TLocation = {
+  state: Record<string, Location>;
+};

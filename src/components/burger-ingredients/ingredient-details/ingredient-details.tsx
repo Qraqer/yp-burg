@@ -1,9 +1,18 @@
 import { useSelector } from '@/services/store';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import styles from './ingredient-details.module.css';
 
 export const IngredientDetails = (): React.JSX.Element => {
-  const { ingredient } = useSelector((state) => state.ingredients);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { ingredients } = useSelector((state) => state);
+  const ingredient = ingredients.ingredients.find((item) => item._id === id);
+
+  if (!ingredient) {
+    navigate('/not-found');
+    return <></>;
+  }
 
   const nutrition = [
     {
