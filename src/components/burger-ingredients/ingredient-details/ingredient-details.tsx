@@ -1,17 +1,16 @@
+import { Error404 } from '@/pages/error404/error404';
 import { useSelector } from '@/services/store';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import styles from './ingredient-details.module.css';
 
 export const IngredientDetails = (): React.JSX.Element => {
-  const navigate = useNavigate();
   const { id } = useParams();
-  const { ingredients } = useSelector((state) => state);
+  const ingredients = useSelector((state) => state.ingredients);
   const ingredient = ingredients.ingredients.find((item) => item._id === id);
 
   if (!ingredient) {
-    navigate('/not-found');
-    return <></>;
+    return <Error404 />;
   }
 
   const nutrition = [

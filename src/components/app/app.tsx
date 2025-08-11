@@ -31,13 +31,16 @@ export const App = (): React.JSX.Element => {
     dispatch(getIngredients());
   }, [dispatch]);
 
+  /*
+   */
+
   return (
     <>
       <Routes location={background ?? location}>
-        <Route path="/" element={<AppLayout />}>
+        <Route element={<AppLayout />}>
           <Route index element={<Home />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/ingredients/:id" element={<IngredientDetails />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
