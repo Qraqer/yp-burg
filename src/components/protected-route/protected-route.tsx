@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from '@/services/store';
 import { getProfile } from '@/services/user/actions';
-import { /* getAuth, */ getUser, setUser } from '@/services/user/reducer';
+import { getUser, setUser } from '@/services/user/reducer';
 import { SKIPBACK, ROUTES } from '@/utils/constants';
 import { useEffect } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import type { IUser } from '@/utils/types';
 import type { ReactElement } from 'react';
@@ -17,9 +17,8 @@ type TProtectedProps = {
 const Protected = ({
   userIsAuthorized = true,
   component,
-}: TProtectedProps): React.JSX.Element | boolean => {
+}: TProtectedProps): React.JSX.Element => {
   const user = useSelector(getUser);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   location.state = (location.state as Record<string, Location>) ?? {};
@@ -59,8 +58,8 @@ const Protected = ({
     const { from } = (location.state as Record<string, Location>).from
       ? (location.state as Record<string, Location>)
       : { from: { pathname: ROUTES.index } };
-    navigate(from.pathname);
-    return false;
+    // console.log('from', from);
+    return <Navigate to={from} />;
   }
 
   return component;
