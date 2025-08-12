@@ -27,7 +27,6 @@ export const ForgotPassword = (): React.JSX.Element => {
           setSuccess(true);
           dispatch(setForgotPassword(true));
           navigate(ROUTES.login);
-          return;
         } else {
           setError('Упс, что-то пошло не так!..');
         }

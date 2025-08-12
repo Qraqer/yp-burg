@@ -51,9 +51,9 @@ export const ProfileEdit = (): React.JSX.Element => {
     dispatch(patchProfile({ name, email, password }))
       .then((result) => {
         if (patchProfile.fulfilled.match(result)) {
-          setError('Упс, что-то пошло не так!..');
-        } else {
           setValuesChanged(false);
+        } else {
+          setError('Упс, что-то пошло не так!..');
         }
       })
       .catch((e) => console.log('Error in login process: ', e));

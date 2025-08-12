@@ -34,7 +34,6 @@ export const Register = (): React.JSX.Element => {
       .then((result) => {
         if (postRegistration.fulfilled.match(result)) {
           navigate(ROUTES.index);
-          return;
         } else {
           setError('Упс, что-то пошло не так!..');
         }
