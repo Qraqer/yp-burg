@@ -1,17 +1,25 @@
-import { useSelector } from '@/services/store';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Error404 } from '@/pages/error404/error404';
+import { getIngredients } from '@/services/burger-ingredients/actions';
+import { useDispatch, useSelector } from '@/services/store';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import styles from './ingredient-details.module.css';
 
 export const IngredientDetails = (): React.JSX.Element => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id } = useParams();
-  const { ingredients } = useSelector((state) => state);
-  const ingredient = ingredients.ingredients.find((item) => item._id === id);
+  const { ingredients } = useSelector((state) => state.ingredients);
+  const ingredient = ingredients.find((item) => item._id === id);
+
+  useEffect(() => {
+    if (!ingredients) {
+      dispatch(getIngredients());
+    }
+  }, [ingredients, dispatch]);
 
   if (!ingredient) {
-    navigate('/not-found');
-    return <></>;
+    return <Error404 />;
   }
 
   const nutrition = [

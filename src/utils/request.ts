@@ -1,4 +1,4 @@
-import type { IResponse } from './types';
+import type { TResponse } from './types';
 
 const handleResponse = <T>(result: Response): Promise<T> => {
   return result.ok
@@ -6,13 +6,13 @@ const handleResponse = <T>(result: Response): Promise<T> => {
     : Promise.reject(new Error(`Error in response: ${result.status}`));
 };
 
-const handleResult = <T extends IResponse>(result: T): Promise<T> => {
+const handleResult = <T extends TResponse>(result: T): Promise<T> => {
   return result.success
     ? Promise.resolve(result)
     : Promise.reject(new Error(`Error in result: ${result || ''}`));
 };
 
-export const request = <T extends IResponse>(
+export const request = <T extends TResponse>(
   url: string,
   options?: RequestInit
 ): Promise<T> => {

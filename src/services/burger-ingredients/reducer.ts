@@ -23,6 +23,7 @@ const initialState: TIngredientsState = {
     image_mobile: '',
     __v: 0,
   },
+  showModal: false,
 };
 
 export const burgerIngredientsSlice = createSlice({
@@ -34,6 +35,9 @@ export const burgerIngredientsSlice = createSlice({
     },
     clearIngregient: (state) => {
       state.ingredient = initialState.ingredient;
+    },
+    setShowModal: (state, action: PayloadAction<boolean>) => {
+      state.showModal = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -51,4 +55,5 @@ export const burgerIngredientsSlice = createSlice({
   },
 });
 
-export const { showIngredient, clearIngregient } = burgerIngredientsSlice.actions;
+export const { showIngredient, setShowModal, clearIngregient } =
+  burgerIngredientsSlice.actions;
