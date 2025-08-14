@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from '@/services/store';
-import { getProfile, patchProfile } from '@/services/user/actions';
+import { /* getProfile, */ patchProfile } from '@/services/user/actions';
 import { getUser } from '@/services/user/reducer';
 import {
   Button,
@@ -21,15 +21,7 @@ export const ProfileEdit = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // console.log('useEffect user', user);
-    dispatch(getProfile());
-  }, [user, dispatch]);
-
-  useEffect(() => {
     if (user?.name && user.name !== '') setName(user.name);
-  }, [user]);
-
-  useEffect(() => {
     if (user?.email && user.email !== '') setEmail(user.email);
   }, [user]);
 

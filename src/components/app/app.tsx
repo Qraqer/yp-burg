@@ -8,6 +8,7 @@ import { ResetPassword } from '@/pages/reset-password/reset';
 import { getIngredients } from '@/services/burger-ingredients/actions';
 import { setShowModal } from '@/services/burger-ingredients/reducer';
 import { useDispatch } from '@/services/store';
+import { checkUserAuth } from '@/services/user/actions';
 import { ROUTES } from '@/utils/constants';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -15,13 +16,18 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { AppLayout } from '../app-layout/app-layout';
 import { IngredientDetails } from '../burger-ingredients/ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
-import { UserIsAuthorized, UserNotAuthorized } from '../protected-route/protected-route';
+import { OnlyAuthorized, OnlyGuest } from '../protected-route/protected-route';
 
 export const App = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(checkUserAuth());
+    dispatch(getIngredients());
+  }, [dispatch]);
 
   const background: Location | null =
     (location.state as Record<string, Location>)?.background ?? null;
@@ -32,34 +38,27 @@ export const App = (): React.JSX.Element => {
     return;
   };
 
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, [dispatch]);
-
   return (
     <>
       <Routes location={background ?? location}>
         <Route element={<AppLayout />}>
           <Route path={ROUTES.ingredients} element={<IngredientDetails />} />
-          <Route
-            path={ROUTES.login}
-            element={<UserNotAuthorized component={<Login />} />}
-          />
+          <Route path={ROUTES.login} element={<OnlyGuest component={<Login />} />} />
           <Route
             path={ROUTES.register}
-            element={<UserNotAuthorized component={<Register />} />}
+            element={<OnlyGuest component={<Register />} />}
           />
           <Route
             path={ROUTES.forgotPassword}
-            element={<UserNotAuthorized component={<ForgotPassword />} />}
+            element={<OnlyGuest component={<ForgotPassword />} />}
           />
           <Route
             path={ROUTES.resetPassword}
-            element={<UserNotAuthorized component={<ResetPassword />} />}
+            element={<OnlyGuest component={<ResetPassword />} />}
           />
           <Route
             path={ROUTES.profile}
-            element={<UserIsAuthorized component={<Profile />} />}
+            element={<OnlyAuthorized component={<Profile />} />}
           />
           <Route path={ROUTES.error404} element={<Error404 />} />
           <Route index element={<Home />} />

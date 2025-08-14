@@ -2,6 +2,8 @@ import { API_POINTS } from '@/utils/constants';
 import { request } from '@/utils/request';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+import { setUser } from './reducer';
+
 import type {
   IEmail,
   IPasswordUpdate,
@@ -14,9 +16,26 @@ import type {
   TResponse,
 } from '@/utils/types';
 
+export const checkUserAuth = createAsyncThunk(
+  'user/checkUserAuth',
+  async (__dirname, { dispatch }) => {
+    if (localStorage.getItem('accessToken')) {
+      try {
+        dispatch(getProfile());
+        return Promise.resolve('success');
+      } catch (err) {
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('accessToken');
+        dispatch(setUser(null));
+        return Promise.reject(`No user found: ${err}`);
+      }
+    }
+  }
+);
+
 export const postRegistration = createAsyncThunk(
   'user/registration',
-  async ({ name, email, password }: IUserReg) => {
+  async ({ name, email, password }: IUserReg, { dispatch }) => {
     try {
       const registration = await request<IRegistration>(API_POINTS.register, {
         method: 'POST',
@@ -25,6 +44,7 @@ export const postRegistration = createAsyncThunk(
       });
       localStorage.setItem('refreshToken', registration.refreshToken ?? '');
       localStorage.setItem('accessToken', registration.accessToken ?? '');
+      dispatch(setUser(registration.user ?? null));
       return Promise.resolve(registration.user);
     } catch (error) {
       return Promise.reject(error);
@@ -34,7 +54,7 @@ export const postRegistration = createAsyncThunk(
 
 export const postLogin = createAsyncThunk(
   'user/login',
-  async ({ email, password }: IUserAuth) => {
+  async ({ email, password }: IUserAuth, { dispatch }) => {
     try {
       const login = await request<IRegistration>(API_POINTS.login, {
         method: 'POST',
@@ -43,6 +63,7 @@ export const postLogin = createAsyncThunk(
       });
       localStorage.setItem('refreshToken', login.refreshToken ?? '');
       localStorage.setItem('accessToken', login.accessToken ?? '');
+      dispatch(setUser(login.user ?? null));
       return Promise.resolve(login.user);
     } catch (error) {
       return Promise.reject(error);
@@ -50,7 +71,7 @@ export const postLogin = createAsyncThunk(
   }
 );
 
-export const postLogout = createAsyncThunk('user/logout', async () => {
+export const postLogout = createAsyncThunk('user/logout', async (_, { dispatch }) => {
   try {
     const token = localStorage.getItem('refreshToken');
     if (token !== '') {
@@ -64,6 +85,7 @@ export const postLogout = createAsyncThunk('user/logout', async () => {
     if (logout.success) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      dispatch(setUser(null));
     }
     return Promise.resolve(true);
   } catch (error) {
@@ -96,7 +118,6 @@ export const postForgotPassword = createAsyncThunk(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      // console.log('forgotPassword', forgotPassword);
       return Promise.resolve(forgotPassword);
     } catch (error) {
       return Promise.reject(error);
@@ -113,7 +134,6 @@ export const postUpdatePassword = createAsyncThunk(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password, token: code }),
       });
-      // console.log(resetPassword);
       return Promise.resolve(resetPassword);
     } catch (error) {
       return Promise.reject(error);
@@ -121,7 +141,10 @@ export const postUpdatePassword = createAsyncThunk(
   }
 );
 
-export const getProfile = createAsyncThunk('user/profile', async () => {
+export const getProfile = createAsyncThunk('user/profile', async (_, { dispatch }) => {
+  if (!localStorage.getItem('accessToken')) {
+    return Promise.reject('User is unauthorized');
+  }
   try {
     const token = localStorage.getItem('accessToken') ?? '';
     if (token !== '') {
@@ -134,7 +157,7 @@ export const getProfile = createAsyncThunk('user/profile', async () => {
         Authorization: token,
       },
     });
-    // console.log('userData', userData);
+    dispatch(setUser(userData.user));
     return Promise.resolve(userData.user);
   } catch (error) {
     return Promise.reject(error);
@@ -159,7 +182,6 @@ export const patchProfile = createAsyncThunk(
         },
         body: JSON.stringify(updateUser),
       });
-      // console.log('patchProfile', userData);
       return Promise.resolve(userData.user);
     } catch (error) {
       return Promise.reject(error);

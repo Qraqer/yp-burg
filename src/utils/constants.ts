@@ -21,6 +21,7 @@ export const ROUTES = {
   register: '/register',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
+  feed: '/feed',
   error404: '*',
 };
 

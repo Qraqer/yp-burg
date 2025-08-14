@@ -7,14 +7,13 @@ import {
   Button,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export const Login = (): React.JSX.Element => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const formSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
@@ -26,10 +25,9 @@ export const Login = (): React.JSX.Element => {
     }
     dispatch(postLogin({ email, password }))
       .then((result) => {
-        if (postLogin.fulfilled.match(result)) {
-          navigate(ROUTES.index);
-        } else {
+        if (!postLogin.fulfilled.match(result)) {
           setError('Упс, что-то пошло не так!..');
+          console.log('Error while login: ', result);
         }
       })
       .catch((e) => console.log('Error in login process: ', e));
