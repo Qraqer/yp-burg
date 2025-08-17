@@ -27,15 +27,11 @@ const Protected = ({
     dispatch(getProfile());
   }, [dispatch]);
 
-  // console.log('user', user);
-  // console.log('location', location);
-
   if (SKIPBACK.includes(location.pathname)) {
     (location.state as Record<string, Location>).last = location;
   }
 
   if (!onlyUnAuth && !user) {
-    // console.log('userMustBeAuthorized && !user', onlyUnAuth, user);
     return location.pathname === ROUTES.login ? (
       component
     ) : (
@@ -49,16 +45,12 @@ const Protected = ({
   }
 
   if (onlyUnAuth && user) {
-    // console.log('!userMustBeAuthorized && user', onlyUnAuth, user);
     const { from } = (location.state as Record<string, Location>).from
       ? (location.state as Record<string, Location>)
       : { from: { pathname: ROUTES.index } };
-    // console.log('from', from.pathname, component);
     return <Navigate to={from.pathname} replace />;
-    // return <Nav pathname={from.pathname} />;
   }
 
-  // console.log('return component', location, onlyUnAuth, user, component);
   return component;
 };
 

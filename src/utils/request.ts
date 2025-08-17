@@ -1,15 +1,11 @@
 import type { TResponse } from './types';
 
 const handleResponse = <T>(result: Response): Promise<T> => {
-  return result.ok
-    ? result.json()
-    : Promise.reject(new Error(`Error in response: ${result.status}`));
+  return result.json();
 };
 
 const handleResult = <T extends TResponse>(result: T): Promise<T> => {
-  return result.success
-    ? Promise.resolve(result)
-    : Promise.reject(new Error(`Error in result: ${result || ''}`));
+  return result.success ? Promise.resolve(result) : Promise.reject(result);
 };
 
 export const request = <T extends TResponse>(

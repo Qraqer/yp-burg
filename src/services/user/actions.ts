@@ -33,6 +33,57 @@ export const checkUserAuth = createAsyncThunk(
   }
 );
 
+const catchTokenError = <T>(promise: Promise<T>): Promise<[undefined, T] | [Error]> => {
+  return promise
+    .then((result) => [undefined, result] as [undefined, T])
+    .catch((error) => [error]);
+};
+
+const refreshToken = async <T extends TResponse>(): Promise<T | ITokenUpdate> => {
+  const token = localStorage.getItem('refreshToken') ?? '';
+  if (token === '') {
+    return Promise.reject('Empty refresh token');
+  }
+  const [error, refreshResult] = await catchTokenError(
+    request<ITokenUpdate>(API_POINTS.token, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json;charset=utf-8' },
+      body: JSON.stringify({ token }),
+    })
+  );
+  if (error) {
+    return Promise.reject(error);
+  }
+  localStorage.setItem('refreshToken', refreshResult.refreshToken ?? '');
+  localStorage.setItem('accessToken', refreshResult.accessToken ?? '');
+  return refreshResult;
+};
+
+const requestWithCheck = async <T extends TResponse>(
+  url: string,
+  options: RequestInit
+): Promise<T> => {
+  const [error, result] = await catchTokenError(request<T>(url, options));
+  if (result) {
+    return result;
+  }
+  if (error?.message === 'jwt expired') {
+    const [refreshError, refreshResult] = await catchTokenError(refreshToken());
+    if (refreshError) {
+      return Promise.reject(refreshError);
+    }
+    if (!(refreshResult as ITokenUpdate).accessToken) {
+      return Promise.reject('Empty refresh token');
+    }
+    options.headers = {
+      ...options.headers,
+      Authorization: (refreshResult as ITokenUpdate).accessToken ?? '',
+    };
+    return await request(url, options);
+  }
+  return Promise.reject(error);
+};
+
 export const postRegistration = createAsyncThunk(
   'user/registration',
   async ({ name, email, password }: IUserReg, { dispatch }) => {
@@ -145,46 +196,47 @@ export const getProfile = createAsyncThunk('user/profile', async (_, { dispatch 
   if (!localStorage.getItem('accessToken')) {
     return Promise.reject('User is unauthorized');
   }
-  try {
-    const token = localStorage.getItem('accessToken') ?? '';
-    if (token !== '') {
-      postRefreshToken();
-    }
-    const userData = await request<IUserData>(API_POINTS.profile, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        Authorization: token,
-      },
-    });
+  const token = localStorage.getItem('accessToken') ?? '';
+  if (token === '') {
+    return Promise.reject('No token found');
+  }
+  const userData = await requestWithCheck<IUserData>(API_POINTS.profile, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: token,
+    },
+  });
+  if (userData.success) {
     dispatch(setUser(userData.user));
     return Promise.resolve(userData.user);
-  } catch (error) {
-    return Promise.reject(error);
   }
+  return Promise.reject('Error refreshing token');
 });
 
 export const patchProfile = createAsyncThunk(
   'user/profile',
-  async ({ name, email, password }: IUserReg) => {
-    try {
-      const token = localStorage.getItem('accessToken') ?? '';
-      if (token !== '') {
-        postRefreshToken();
-      }
-      const updateUser: IUserPatch = { name, email };
-      if (password !== '') updateUser.password = password;
-      const userData = await request<IUserData>(API_POINTS.profile, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-          Authorization: token,
-        },
-        body: JSON.stringify(updateUser),
-      });
+  async ({ name, email, password }: IUserReg, { dispatch }) => {
+    if (!localStorage.getItem('accessToken')) {
+      return Promise.reject('User is unauthorized');
+    }
+    const token = localStorage.getItem('accessToken') ?? '';
+    if (token === '') {
+      return Promise.reject('No token found');
+    }
+    const updateUser: IUserPatch = { name, email };
+    if (password !== '') updateUser.password = password;
+    const userData = await requestWithCheck<IUserData>(API_POINTS.profile, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        Authorization: token,
+      },
+      body: JSON.stringify(updateUser),
+    });
+    if (userData.success) {
+      dispatch(setUser(userData.user));
       return Promise.resolve(userData.user);
-    } catch (error) {
-      return Promise.reject(error);
     }
   }
 );

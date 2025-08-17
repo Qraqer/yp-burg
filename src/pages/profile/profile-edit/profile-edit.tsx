@@ -62,6 +62,7 @@ export const ProfileEdit = (): React.JSX.Element => {
           setName(e.target.value);
         }}
         icon="EditIcon"
+        autoComplete="name"
       />
       <EmailInput
         name={'email'}
@@ -72,6 +73,7 @@ export const ProfileEdit = (): React.JSX.Element => {
           setEmail(e.target.value);
         }}
         isIcon={true}
+        autoComplete="email"
       />
       <PasswordInput
         name={'password'}
@@ -82,6 +84,7 @@ export const ProfileEdit = (): React.JSX.Element => {
           setPassword(e.target.value);
         }}
         icon="EditIcon"
+        autoComplete="current-password"
       />
       {error !== '' && <div style={{ color: 'red' }}>{error}</div>}
       {valuesChanged && (

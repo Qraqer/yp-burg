@@ -43,12 +43,14 @@ export const Login = (): React.JSX.Element => {
             value={email}
             placeholder={'E-mail'}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
           />
           <PasswordInput
             name={'password'}
             value={password}
             placeholder={'Пароль'}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
           />
           {error !== '' && <div style={{ color: 'red' }}>{error}</div>}
           <Button

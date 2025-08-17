@@ -54,9 +54,10 @@ export const ResetPassword = (): React.JSX.Element => {
             value={password}
             placeholder={'Пароль'}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
           />
           <Input
-            name={'name'}
+            name={'code'}
             value={code}
             placeholder={'Код из письма'}
             onChange={(e) => setCode(e.target.value)}

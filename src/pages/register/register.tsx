@@ -27,9 +27,8 @@ export const Register = (): React.JSX.Element => {
     if (name === '' || email === '' || password === '') {
       setError('Проверьте правильность заполнения полей');
       return;
-    } else {
-      setError('');
     }
+    setError('');
     dispatch(postRegistration({ name, email, password }))
       .then((result) => {
         if (postRegistration.fulfilled.match(result)) {
