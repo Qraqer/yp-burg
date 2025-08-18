@@ -1,10 +1,30 @@
-import { Link, NavLink } from 'react-router-dom';
+import { useDispatch } from '@/services/store';
+import { postLogout } from '@/services/user/actions';
+import { ROUTES } from '@/utils/constants';
+import { useState } from 'react';
+import { /* Link, */ NavLink, useNavigate } from 'react-router-dom';
 
 import { ProfileEdit } from './profile-edit/profile-edit';
 
 import styles from './profile.module.scss';
 
 export const Profile = (): React.JSX.Element => {
+  const [error, setError] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logout = (): void => {
+    dispatch(postLogout())
+      .then((result) => {
+        if (postLogout.fulfilled.match(result)) {
+          navigate(ROUTES.index);
+        } else {
+          setError('Упс, что-то пошло не так!..');
+        }
+      })
+      .catch((e) => console.log('Error in login process: ', e));
+  };
+
   return (
     <>
       <main className={`main pl-5 pr-5 ${styles.profile}`}>
@@ -26,12 +46,13 @@ export const Profile = (): React.JSX.Element => {
             >
               История заказов
             </NavLink>
-            <Link
+            <div
               className={`${styles.profile__menu_link} text_type_main-medium`}
-              to={'/login'}
+              onClick={logout}
             >
               Выход
-            </Link>
+            </div>
+            {error !== '' && <div style={{ color: 'red' }}>{error}</div>}
           </div>
           <div className={styles.profile__lefttext}>
             В этом разделе вы можете изменить свои персональные данные

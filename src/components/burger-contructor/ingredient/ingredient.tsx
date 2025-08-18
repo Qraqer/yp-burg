@@ -7,15 +7,15 @@ import {
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
-import type { IOrderIngredient } from '@/utils/types';
+import type { TOrderIngredient } from '@/utils/types';
 
 import styles from './ingredient.module.css';
 
-type TOrderIngredient = {
-  item: IOrderIngredient;
+type TOrderIngredientProps = {
+  item: TOrderIngredient;
 };
 
-export const Ingredient = ({ item }: TOrderIngredient): React.JSX.Element => {
+export const Ingredient = ({ item }: TOrderIngredientProps): React.JSX.Element => {
   const dispatch = useDispatch();
   const { index } = item;
   const dragRef = useRef(null);

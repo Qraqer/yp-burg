@@ -1,10 +1,13 @@
 import { createOrder } from '@/services/burger-contructor/actions';
 import { addBun, addIngredient, resetOrder } from '@/services/burger-contructor/reducer';
 import { useDispatch, useSelector } from '@/services/store';
+import { getUser } from '@/services/user/reducer';
+import { ROUTES } from '@/utils/constants';
 import { Button, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { nanoid } from '@reduxjs/toolkit';
 import { useMemo, useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
+import { useNavigate } from 'react-router-dom';
 
 import { Modal } from '../modal/modal';
 import { Bun } from './bun/bun';
@@ -20,6 +23,8 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const [orderModal, setOrderModal] = useState(false);
   const dispatch = useDispatch();
   const dropRef = useRef(null);
+  const user = useSelector(getUser);
+  const navigate = useNavigate();
 
   const dropHandler = (item: TIngredient): void => {
     if (item.type === 'bun') {
@@ -50,6 +55,9 @@ export const BurgerConstructor = (): React.JSX.Element => {
   }, [bun, ingredients]);
 
   const orderCreate = (): void => {
+    if (!user) {
+      navigate(ROUTES.login);
+    }
     dispatch(createOrder());
     setOrderModal(true);
   };

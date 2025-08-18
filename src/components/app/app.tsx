@@ -6,53 +6,69 @@ import { Profile } from '@/pages/profile/profile';
 import { Register } from '@/pages/register/register';
 import { ResetPassword } from '@/pages/reset-password/reset';
 import { getIngredients } from '@/services/burger-ingredients/actions';
+import { setShowModal } from '@/services/burger-ingredients/reducer';
 import { useDispatch } from '@/services/store';
+import { checkUserAuth } from '@/services/user/actions';
+import { ROUTES } from '@/utils/constants';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppLayout } from '../app-layout/app-layout';
 import { IngredientDetails } from '../burger-ingredients/ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
+import { OnlyAuthorized, OnlyGuest } from '../protected-route/protected-route';
 
 export const App = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(checkUserAuth());
+    dispatch(getIngredients());
+  }, [dispatch]);
+
   const background: Location | null =
     (location.state as Record<string, Location>)?.background ?? null;
 
   const closeModal = (): void => {
+    dispatch(setShowModal(false));
     navigate(-1);
     return;
   };
-
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, [dispatch]);
-
-  /*
-   */
 
   return (
     <>
       <Routes location={background ?? location}>
         <Route element={<AppLayout />}>
+          <Route path={ROUTES.ingredients} element={<IngredientDetails />} />
+          <Route path={ROUTES.login} element={<OnlyGuest component={<Login />} />} />
+          <Route
+            path={ROUTES.register}
+            element={<OnlyGuest component={<Register />} />}
+          />
+          <Route
+            path={ROUTES.forgotPassword}
+            element={<OnlyGuest component={<ForgotPassword />} />}
+          />
+          <Route
+            path={ROUTES.resetPassword}
+            element={<OnlyGuest component={<ResetPassword />} />}
+          />
+          <Route
+            path={ROUTES.profile}
+            element={<OnlyAuthorized component={<Profile />} />}
+          />
+          <Route path={ROUTES.error404} element={<Error404 />} />
           <Route index element={<Home />} />
-          <Route path="/ingredients/:id" element={<IngredientDetails />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="*" element={<Error404 />} />
         </Route>
       </Routes>
 
       {background && (
         <Routes>
           <Route
-            path="/ingredients/:id"
+            path={ROUTES.ingredients}
             element={
               <Modal title="Детали ингредиента" onClose={closeModal}>
                 <IngredientDetails />

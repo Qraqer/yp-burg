@@ -1,23 +1,21 @@
+import { setShowModal } from '@/services/burger-ingredients/reducer';
 // import { clearIngregient, showIngredient } from '@/services/burger-ingredients/reducer';
-import { /* useDispatch, */ useSelector } from '@/services/store';
+import { useDispatch, useSelector } from '@/services/store';
+import { ROUTES } from '@/utils/constants';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState, useRef, useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-// import { Modal } from '../modal/modal';
-// import { IngredientDetails } from './ingredient-details/ingredient-details';
 import { IngredientItem } from './ingredient-item/ingredient-item';
 
-import type { TIngredient /* , TLocation */ } from '@utils/types';
+import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
 
 export const BurgerIngredients = (): React.JSX.Element => {
   const [currentTab, setCurrentTab] = useState('bun');
-  // const [currentItem, setCurrentItem] = useState<TIngredient | null>(null);
-  // const [showIngredientModal, setIngredientModal] = useState(false);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -54,10 +52,6 @@ export const BurgerIngredients = (): React.JSX.Element => {
     },
   ];
 
-  /* const clickItem = (item: TIngredient): void => {
-    setCurrentItem(item);
-  }; */
-
   useEffect(() => {
     if (inViewBun) {
       setCurrentTab('bun');
@@ -69,18 +63,11 @@ export const BurgerIngredients = (): React.JSX.Element => {
   }, [inViewBun, inViewMain, inViewSauce]);
 
   const showCurrentIngredient = (item: TIngredient): void => {
-    // const loc: TLocation = { background: location };
-    navigate(`/ingredients/${item._id}`, {
+    dispatch(setShowModal(true));
+    navigate(`${ROUTES.ingredientsBase}${item._id}`, {
       state: { background: location },
     });
-    // dispatch(showIngredient(item));
-    // setIngredientModal(true);
   };
-
-  // const clearCurrentIngredient = (): void => {
-  //   dispatch(clearIngregient());
-  //   setIngredientModal(false);
-  // };
 
   return (
     <section className={styles.burger_ingredients}>
@@ -123,12 +110,6 @@ export const BurgerIngredients = (): React.JSX.Element => {
           })}
         </div>
       </section>
-
-      {/* showIngredientModal && (
-        <Modal title="Детали ингредиента" onClose={clearCurrentIngredient}>
-          <IngredientDetails />
-        </Modal>
-      ) */}
     </section>
   );
 };

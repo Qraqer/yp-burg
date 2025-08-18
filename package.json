@@ -22,6 +22,9 @@
     "test": "vitest",
     "test:ui": "vitest --ui"
   },
+  "engineds": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@babel/runtime": "^7.27.6",
     "@krgaa/react-developer-burger-ui-components": "^1.0.1",

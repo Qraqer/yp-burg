@@ -2,10 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { createOrder } from './actions';
 
-import type { IOrderIngredient, IOrderState /* TIngredient */ } from '@/utils/types';
+import type { TOrderIngredient, TOrderState /* TIngredient */ } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: IOrderState = {
+const initialState: TOrderState = {
   orderBun: null,
   orderItems: [],
   orderId: null,
@@ -22,10 +22,10 @@ export const burgerConstructorSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    addBun: (state, action: PayloadAction<IOrderIngredient>) => {
+    addBun: (state, action: PayloadAction<TOrderIngredient>) => {
       state.orderBun = action.payload;
     },
-    addIngredient: (state, action: PayloadAction<IOrderIngredient>) => {
+    addIngredient: (state, action: PayloadAction<TOrderIngredient>) => {
       state.orderItems.push({ ...action.payload });
     },
     removeBun: (state) => {
