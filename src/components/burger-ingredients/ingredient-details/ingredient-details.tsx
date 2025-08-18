@@ -1,9 +1,26 @@
-import { useSelector } from '@/services/store';
+import { Error404 } from '@/pages/error404/error404';
+import { getIngredients } from '@/services/burger-ingredients/actions';
+import { useDispatch, useSelector } from '@/services/store';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import styles from './ingredient-details.module.css';
 
 export const IngredientDetails = (): React.JSX.Element => {
-  const { ingredient } = useSelector((state) => state.ingredients);
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const { ingredients } = useSelector((state) => state.ingredients);
+  const ingredient = ingredients.find((item) => item._id === id);
+
+  useEffect(() => {
+    if (!ingredients) {
+      dispatch(getIngredients());
+    }
+  }, [ingredients, dispatch]);
+
+  if (!ingredient) {
+    return <Error404 />;
+  }
 
   const nutrition = [
     {

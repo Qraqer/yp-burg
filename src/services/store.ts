@@ -3,8 +3,13 @@ import { useDispatch as uDispatch, useSelector as uSelector } from 'react-redux'
 
 import { burgerConstructorSlice } from './burger-contructor/reducer';
 import { burgerIngredientsSlice } from './burger-ingredients/reducer';
+import { userSlice } from './user/reducer';
 
-const rootReducer = combineSlices(burgerIngredientsSlice, burgerConstructorSlice);
+const rootReducer = combineSlices(
+  burgerIngredientsSlice,
+  burgerConstructorSlice,
+  userSlice
+);
 
 export const store = configureStore({
   reducer: rootReducer,
