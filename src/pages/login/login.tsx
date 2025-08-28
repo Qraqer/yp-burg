@@ -1,3 +1,4 @@
+import useForm from '@/hooks/useForm';
 import { useDispatch } from '@/services/store';
 import { postLogin } from '@/services/user/actions';
 import { ROUTES } from '@/utils/constants';
@@ -10,20 +11,18 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export const Login = (): React.JSX.Element => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [value, onChange] = useForm({ email: '', password: '' });
   const [error, setError] = useState('');
   const dispatch = useDispatch();
 
   const formSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (email === '' || password === '') {
+    if (value.email === '' || value.password === '') {
       setError('Проверьте правильность заполнения полей');
       return;
-    } else {
-      setError('');
     }
-    dispatch(postLogin({ email, password }))
+    setError('');
+    dispatch(postLogin(value))
       .then((result) => {
         if (!postLogin.fulfilled.match(result)) {
           setError('Упс, что-то пошло не так!..');
@@ -40,16 +39,16 @@ export const Login = (): React.JSX.Element => {
           <h3>Вход</h3>
           <EmailInput
             name={'email'}
-            value={email}
+            value={value.email}
             placeholder={'E-mail'}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={onChange}
             autoComplete="email"
           />
           <PasswordInput
             name={'password'}
-            value={password}
+            value={value.password}
             placeholder={'Пароль'}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={onChange}
             autoComplete="current-password"
           />
           {error !== '' && <div style={{ color: 'red' }}>{error}</div>}
@@ -57,7 +56,7 @@ export const Login = (): React.JSX.Element => {
             htmlType="submit"
             type="primary"
             size="medium"
-            disabled={!(email && password)}
+            disabled={!(value.email && value.password)}
           >
             Войти
           </Button>

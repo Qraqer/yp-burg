@@ -1,3 +1,4 @@
+import useForm from '@/hooks/useForm';
 import { useDispatch, useSelector } from '@/services/store';
 import { postUpdatePassword } from '@/services/user/actions';
 import { getForgotPassword } from '@/services/user/reducer';
@@ -11,8 +12,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export const ResetPassword = (): React.JSX.Element => {
-  const [code, setCode] = useState('');
-  const [password, setPassword] = useState('');
+  const [value, onChange] = useForm({ code: '', password: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
@@ -21,13 +21,12 @@ export const ResetPassword = (): React.JSX.Element => {
 
   const resetPassword = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (code === '' || password === '') {
+    if (value.code === '' || value.password === '') {
       setError('Проверьте правильность заполнения полей');
       return;
-    } else {
-      setError('');
     }
-    dispatch(postUpdatePassword({ password, code }))
+    setError('');
+    dispatch(postUpdatePassword(value))
       .then((result) => {
         if (postUpdatePassword.fulfilled.match(result)) {
           setSuccess(true);
@@ -51,16 +50,16 @@ export const ResetPassword = (): React.JSX.Element => {
           <h3>Восстановление пароля</h3>
           <PasswordInput
             name={'password'}
-            value={password}
+            value={value.password}
             placeholder={'Пароль'}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={onChange}
             autoComplete="new-password"
           />
           <Input
             name={'code'}
-            value={code}
+            value={value.code}
             placeholder={'Код из письма'}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={onChange}
           />
           {error !== '' && <div style={{ color: 'red' }}>{error}</div>}
           {success && (
@@ -75,7 +74,7 @@ export const ResetPassword = (): React.JSX.Element => {
             htmlType="submit"
             type="primary"
             size="medium"
-            disabled={!code && !password}
+            disabled={!value.code && !value.password}
           >
             Сохранить
           </Button>
