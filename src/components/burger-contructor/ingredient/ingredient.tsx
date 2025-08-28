@@ -8,6 +8,7 @@ import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
 import type { TOrderIngredient } from '@/utils/types';
+import type { FC } from 'react';
 
 import styles from './ingredient.module.css';
 
@@ -15,7 +16,7 @@ type TOrderIngredientProps = {
   item: TOrderIngredient;
 };
 
-export const Ingredient = ({ item }: TOrderIngredientProps): React.JSX.Element => {
+export const Ingredient: FC<TOrderIngredientProps> = ({ item }): React.JSX.Element => {
   const dispatch = useDispatch();
   const { index } = item;
   const dragRef = useRef(null);

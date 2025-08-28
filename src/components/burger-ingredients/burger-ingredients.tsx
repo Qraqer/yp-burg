@@ -1,5 +1,4 @@
 import { setShowModal } from '@/services/burger-ingredients/reducer';
-// import { clearIngregient, showIngredient } from '@/services/burger-ingredients/reducer';
 import { useDispatch, useSelector } from '@/services/store';
 import { ROUTES } from '@/utils/constants';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
@@ -10,11 +9,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { IngredientItem } from './ingredient-item/ingredient-item';
 
 import type { TIngredient } from '@utils/types';
+import type { FC } from 'react';
 
 import styles from './burger-ingredients.module.css';
 
-export const BurgerIngredients = (): React.JSX.Element => {
-  const [currentTab, setCurrentTab] = useState('bun');
+export const BurgerIngredients: FC = (): React.JSX.Element => {
+  const [currentTab, setCurrentTab] = useState<string>('bun');
   const dispatch = useDispatch();
 
   const location = useLocation();

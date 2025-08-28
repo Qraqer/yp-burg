@@ -18,7 +18,9 @@ import { IngredientDetails } from '../burger-ingredients/ingredient-details/ingr
 import { Modal } from '../modal/modal';
 import { OnlyAuthorized, OnlyGuest } from '../protected-route/protected-route';
 
-export const App = (): React.JSX.Element => {
+import type { FC } from 'react';
+
+export const App: FC = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();

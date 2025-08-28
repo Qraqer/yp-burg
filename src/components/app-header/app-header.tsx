@@ -7,9 +7,11 @@ import {
 
 import { NavItem } from './nav-item/nav-item';
 
+import type { FC } from 'react';
+
 import styles from './app-header.module.css';
 
-export const AppHeader = (): React.JSX.Element => {
+export const AppHeader: FC = (): React.JSX.Element => {
   return (
     <header className={styles.header}>
       <nav className={`${styles.menu} p-4`}>

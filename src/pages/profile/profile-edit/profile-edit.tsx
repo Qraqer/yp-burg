@@ -9,15 +9,17 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
 
+import type { FC } from 'react';
+
 import styles from './profile-edit.module.scss';
 
-export const ProfileEdit = (): React.JSX.Element => {
+export const ProfileEdit: FC = (): React.JSX.Element => {
   const user = useSelector(getUser);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [valuesChanged, setValuesChanged] = useState(false);
-  const [error, setError] = useState('');
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [valuesChanged, setValuesChanged] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
   const dispatch = useDispatch();
 
   useEffect(() => {

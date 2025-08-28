@@ -10,9 +10,12 @@ import {
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export const Login = (): React.JSX.Element => {
-  const [value, onChange] = useForm({ email: '', password: '' });
-  const [error, setError] = useState('');
+import type { IUserAuth } from '@/utils/types';
+import type { FC } from 'react';
+
+export const Login: FC = (): React.JSX.Element => {
+  const [value, onChange] = useForm<IUserAuth>({ email: '', password: '' });
+  const [error, setError] = useState<string>('');
   const dispatch = useDispatch();
 
   const formSubmit = (e: React.FormEvent): void => {

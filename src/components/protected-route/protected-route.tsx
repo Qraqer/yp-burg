@@ -5,7 +5,7 @@ import { SKIPBACK, ROUTES } from '@/utils/constants';
 import { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import type { ReactElement } from 'react';
+import type { FC, ReactElement } from 'react';
 import type { Location } from 'react-router-dom';
 // import { Nav } from '../nav/nav';
 
@@ -14,10 +14,10 @@ type TProtectedProps = {
   component: ReactElement;
 };
 
-const Protected = ({
+const Protected: FC<TProtectedProps> = ({
   onlyUnAuth = false,
   component,
-}: TProtectedProps): React.JSX.Element => {
+}): React.JSX.Element => {
   const user = useSelector(getUser);
   const dispatch = useDispatch();
   const location = useLocation();

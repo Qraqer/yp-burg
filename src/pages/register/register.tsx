@@ -12,9 +12,12 @@ import {
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-export const Register = (): React.JSX.Element => {
-  const [value, onChange] = useForm({ name: '', email: '', password: '' });
-  const [error, setError] = useState('');
+import type { IUserReg } from '@/utils/types';
+import type { FC } from 'react';
+
+export const Register: FC = (): React.JSX.Element => {
+  const [value, onChange] = useForm<IUserReg>({ name: '', email: '', password: '' });
+  const [error, setError] = useState<string>('');
 
   const user = useSelector(getUser);
 

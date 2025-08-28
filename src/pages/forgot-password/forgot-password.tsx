@@ -7,10 +7,13 @@ import { Button, EmailInput } from '@krgaa/react-developer-burger-ui-components'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-export const ForgotPassword = (): React.JSX.Element => {
-  const [value, onChange] = useForm({ email: '' });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+import type { IEmail } from '@/utils/types';
+import type { FC } from 'react';
+
+export const ForgotPassword: FC = (): React.JSX.Element => {
+  const [value, onChange] = useForm<IEmail>({ email: '' });
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

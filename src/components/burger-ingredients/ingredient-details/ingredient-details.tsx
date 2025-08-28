@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from '@/services/store';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import type { FC } from 'react';
+
 import styles from './ingredient-details.module.css';
 
-export const IngredientDetails = (): React.JSX.Element => {
+export const IngredientDetails: FC = (): React.JSX.Element => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { ingredients } = useSelector((state) => state.ingredients);

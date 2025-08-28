@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 
-export const Error404 = (): React.JSX.Element => {
+import type { FC } from 'react';
+
+export const Error404: FC = (): React.JSX.Element => {
   return (
     <>
       <main className={`section-center main pl-5 pr-5`}>

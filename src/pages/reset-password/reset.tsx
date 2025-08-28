@@ -11,10 +11,13 @@ import {
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-export const ResetPassword = (): React.JSX.Element => {
-  const [value, onChange] = useForm({ code: '', password: '' });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+import type { IPasswordUpdate } from '@/utils/types';
+import type { FC } from 'react';
+
+export const ResetPassword: FC = (): React.JSX.Element => {
+  const [value, onChange] = useForm<IPasswordUpdate>({ code: '', password: '' });
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isForgotPassPageVisited = useSelector(getForgotPassword);
