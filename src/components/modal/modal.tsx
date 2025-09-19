@@ -4,6 +4,8 @@ import { createPortal } from 'react-dom';
 
 import { ModalOverlay } from './modal-overlay/modal-overlay';
 
+import type { FC } from 'react';
+
 import styles from './modal.module.css';
 
 type IModalProps = {
@@ -12,11 +14,11 @@ type IModalProps = {
   title?: string;
 };
 
-export const Modal = ({
+export const Modal: FC<IModalProps> = ({
   children,
   onClose,
   title = '',
-}: IModalProps): React.JSX.Element => {
+}): React.JSX.Element => {
   const modal = document.getElementById('modal')!;
 
   useEscape(onClose);

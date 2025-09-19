@@ -1,6 +1,8 @@
 import { cloneElement, useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
+import type { FC } from 'react';
+
 import styles from './nav-item.module.css';
 
 type INavItemProp = {
@@ -10,14 +12,14 @@ type INavItemProp = {
   className?: string;
 };
 
-export const NavItem = ({
+export const NavItem: FC<INavItemProp> = ({
   to,
   text,
   icon,
   className = '',
-}: INavItemProp): React.JSX.Element => {
+}): React.JSX.Element => {
   const location = useLocation();
-  const [isCurrentRoute, checkCurrentRoute] = useState(false);
+  const [isCurrentRoute, checkCurrentRoute] = useState<boolean>(false);
 
   useEffect(() => {
     checkCurrentRoute(location.pathname === to);

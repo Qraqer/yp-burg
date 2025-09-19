@@ -15,12 +15,13 @@ import { Ingredient } from './ingredient/ingredient';
 import { OrderDetails } from './order-details/order-details';
 
 import type { TIngredient } from '@/utils/types';
+import type { FC } from 'react';
 
 import styles from './burger-constructor.module.css';
 
-export const BurgerConstructor = (): React.JSX.Element => {
+export const BurgerConstructor: FC = (): React.JSX.Element => {
   const { orderBun: bun, orderItems: ingredients } = useSelector((state) => state.order);
-  const [orderModal, setOrderModal] = useState(false);
+  const [orderModal, setOrderModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const dropRef = useRef(null);
   const user = useSelector(getUser);

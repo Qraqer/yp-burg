@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 
 import type { TIngredient } from '@utils/types';
+import type { FC } from 'react';
 
 import styles from './ingredient-item.module.css';
 
@@ -12,13 +13,13 @@ type IIngredientItemProps = {
   onClick: () => void;
 };
 
-export const IngredientItem = ({
+export const IngredientItem: FC<IIngredientItemProps> = ({
   ingredient,
   onClick,
-}: IIngredientItemProps): React.JSX.Element => {
+}): React.JSX.Element => {
   const { image, name, price } = ingredient;
   const dragRef = useRef(null);
-  const [counter, setCount] = useState(0);
+  const [counter, setCount] = useState<number>(0);
   const { orderBun, orderItems } = useSelector((state) => state.order);
 
   useEffect(() => {

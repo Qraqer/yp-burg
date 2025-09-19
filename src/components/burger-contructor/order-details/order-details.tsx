@@ -1,9 +1,11 @@
 import orderBg from '@/images/order_btn_bg.png';
 import { useSelector } from '@/services/store';
 
+import type { FC } from 'react';
+
 import styles from './order-details.module.css';
 
-export const OrderDetails = (): React.JSX.Element => {
+export const OrderDetails: FC = (): React.JSX.Element => {
   const { orderLoading, orderId, orderError } = useSelector((state) => state.order);
 
   return (

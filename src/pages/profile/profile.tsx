@@ -6,10 +6,12 @@ import { /* Link, */ NavLink, useNavigate } from 'react-router-dom';
 
 import { ProfileEdit } from './profile-edit/profile-edit';
 
+import type { FC } from 'react';
+
 import styles from './profile.module.scss';
 
-export const Profile = (): React.JSX.Element => {
-  const [error, setError] = useState('');
+export const Profile: FC = (): React.JSX.Element => {
+  const [error, setError] = useState<string>('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

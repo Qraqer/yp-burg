@@ -1,3 +1,4 @@
+import useForm from '@/hooks/useForm';
 import { useDispatch, useSelector } from '@/services/store';
 import { postRegistration } from '@/services/user/actions';
 import { getUser, setAuth } from '@/services/user/reducer';
@@ -11,11 +12,12 @@ import {
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-export const Register = (): React.JSX.Element => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+import type { IUserReg } from '@/utils/types';
+import type { FC } from 'react';
+
+export const Register: FC = (): React.JSX.Element => {
+  const [value, onChange] = useForm<IUserReg>({ name: '', email: '', password: '' });
+  const [error, setError] = useState<string>('');
 
   const user = useSelector(getUser);
 
@@ -24,12 +26,12 @@ export const Register = (): React.JSX.Element => {
 
   const formSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (name === '' || email === '' || password === '') {
+    if (value.name === '' || value.email === '' || value.password === '') {
       setError('Проверьте правильность заполнения полей');
       return;
     }
     setError('');
-    dispatch(postRegistration({ name, email, password }))
+    dispatch(postRegistration(value))
       .then((result) => {
         if (postRegistration.fulfilled.match(result)) {
           navigate(ROUTES.index);
@@ -54,28 +56,28 @@ export const Register = (): React.JSX.Element => {
           <h3>Регистрация</h3>
           <Input
             name={'name'}
-            value={name}
+            value={value.name}
             placeholder={'Имя'}
-            onChange={(e) => setName(e.target.value)}
+            onChange={onChange}
           />
           <EmailInput
             name={'email'}
-            value={email}
+            value={value.email}
             placeholder={'E-mail'}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={onChange}
           />
           <PasswordInput
             name={'password'}
-            value={password}
+            value={value.password}
             placeholder={'Пароль'}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={onChange}
           />
           {error !== '' && <div style={{ color: 'red' }}>{error}</div>}
           <Button
             htmlType="submit"
             type="primary"
             size="medium"
-            disabled={!(email && password && name) && error !== ''}
+            disabled={!(value.email && value.password && value.name) && error !== ''}
           >
             Зарегистрироваться
           </Button>

@@ -1,3 +1,4 @@
+import useForm from '@/hooks/useForm';
 import { useDispatch } from '@/services/store';
 import { postForgotPassword } from '@/services/user/actions';
 import { setForgotPassword } from '@/services/user/reducer';
@@ -6,22 +7,24 @@ import { Button, EmailInput } from '@krgaa/react-developer-burger-ui-components'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-export const ForgotPassword = (): React.JSX.Element => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+import type { IEmail } from '@/utils/types';
+import type { FC } from 'react';
+
+export const ForgotPassword: FC = (): React.JSX.Element => {
+  const [value, onChange] = useForm<IEmail>({ email: '' });
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const forgotPassword = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (email === '') {
+    if (value.email === '') {
       setError('E-mail не может быть пустым!');
       return;
-    } else {
-      setError('');
     }
-    dispatch(postForgotPassword({ email }))
+    setError('');
+    dispatch(postForgotPassword(value))
       .then((result) => {
         if (postForgotPassword.fulfilled.match(result)) {
           setSuccess(true);
@@ -41,22 +44,22 @@ export const ForgotPassword = (): React.JSX.Element => {
           <h3>Восстановление пароля</h3>
           <EmailInput
             name={'email'}
-            value={email}
+            value={value.email}
             placeholder={'Укажите e-mail'}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={onChange}
           />
           {error !== '' && <div style={{ color: 'red' }}>{error}</div>}
           {success && (
             <div style={{ color: 'blue' }}>
               <p>
-                Инструкции по восстановлению пароля отправлены на {email}.
+                Инструкции по восстановлению пароля отправлены на {value.email}.
                 <Link to={ROUTES.resetPassword} className={'link'}>
                   Перейти на страницу обновления пароля
                 </Link>
               </p>
             </div>
           )}
-          <Button htmlType="submit" type="primary" size="medium" disabled={!email}>
+          <Button htmlType="submit" type="primary" size="medium" disabled={!value.email}>
             Восстановить
           </Button>
         </form>

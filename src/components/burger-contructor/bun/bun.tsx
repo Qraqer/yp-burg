@@ -1,6 +1,7 @@
 import { ConstructorElement } from '@krgaa/react-developer-burger-ui-components';
 
 import type { TIngredient } from '@utils/types';
+import type { FC } from 'react';
 
 import styles from './bun.module.css';
 
@@ -9,7 +10,7 @@ type TBunProps = {
   type: 'top' | 'bottom' | undefined;
 };
 
-export const Bun = ({ bun, type }: TBunProps): React.JSX.Element => {
+export const Bun: FC<TBunProps> = ({ bun, type }): React.JSX.Element => {
   const typeExplain = {
     top: 'верх',
     bottom: 'низ',

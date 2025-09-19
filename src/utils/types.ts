@@ -106,3 +106,5 @@ export type ITokenUpdate = {
 export type IRegistration = {
   user?: IUser;
 } & ITokenUpdate;
+
+export type TObject = Record<string, string>;
