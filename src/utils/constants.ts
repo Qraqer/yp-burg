@@ -1,4 +1,6 @@
-export const API = 'https://norma.nomoreparties.space/api';
+export const WS = 'wss://norma.nomoreparties.space';
+
+export const API = `https://norma.nomoreparties.space/api`;
 
 export const API_POINTS = {
   ingredients: `${API}/ingredients`,
@@ -10,6 +12,9 @@ export const API_POINTS = {
   logout: `${API}/auth/logout`,
   token: `${API}/auth/token`,
   profile: `${API}/auth/user`,
+
+  ordersAll: `${WS}/orders/all`,
+  ordersUser: `${WS}/orders`,
 };
 
 export const ROUTES = {
@@ -18,10 +23,13 @@ export const ROUTES = {
   ingredientsBase: '/ingredients/',
   login: '/login',
   profile: '/profile',
+  profileOrders: '/profile/orders',
+  profileOrder: '/profile/orders/:id',
   register: '/register',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
   feed: '/feed',
+  feedOrder: '/feed/:id',
   error404: '*',
 };
 

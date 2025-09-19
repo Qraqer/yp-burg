@@ -1,7 +1,9 @@
 import { Error404 } from '@/pages/error404/error404';
+import { Feed } from '@/pages/feed/feed';
 import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
 import { Login } from '@/pages/login/login';
+import { OrdersList } from '@/pages/profile/orders-list/orders-list';
 import { Profile } from '@/pages/profile/profile';
 import { Register } from '@/pages/register/register';
 import { ResetPassword } from '@/pages/reset-password/reset';
@@ -45,6 +47,7 @@ export const App: FC = (): React.JSX.Element => {
       <Routes location={background ?? location}>
         <Route element={<AppLayout />}>
           <Route path={ROUTES.ingredients} element={<IngredientDetails />} />
+          <Route path={ROUTES.feed} element={<Feed />} />
           <Route path={ROUTES.login} element={<OnlyGuest component={<Login />} />} />
           <Route
             path={ROUTES.register}
@@ -61,6 +64,10 @@ export const App: FC = (): React.JSX.Element => {
           <Route
             path={ROUTES.profile}
             element={<OnlyAuthorized component={<Profile />} />}
+          />
+          <Route
+            path={ROUTES.profileOrders}
+            element={<OnlyAuthorized component={<OrdersList />} />}
           />
           <Route path={ROUTES.error404} element={<Error404 />} />
           <Route index element={<Home />} />

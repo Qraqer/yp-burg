@@ -3,16 +3,21 @@ import { useDispatch as uDispatch, useSelector as uSelector } from 'react-redux'
 
 import { burgerConstructorSlice } from './burger-contructor/reducer';
 import { burgerIngredientsSlice } from './burger-ingredients/reducer';
+import { ordersUserMiddleware, ordersUserSlice } from './orders-history/reducer';
 import { userSlice } from './user/reducer';
 
 const rootReducer = combineSlices(
   burgerIngredientsSlice,
   burgerConstructorSlice,
-  userSlice
+  userSlice,
+  ordersUserSlice
 );
+
+export const middlewares = [ordersUserMiddleware];
 
 export const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(...middlewares),
 });
 
 // Type helpers

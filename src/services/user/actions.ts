@@ -39,7 +39,7 @@ const catchTokenError = <T>(promise: Promise<T>): Promise<[undefined, T] | [Erro
     .catch((error) => [error]);
 };
 
-const refreshToken = async <T extends TResponse>(): Promise<T | ITokenUpdate> => {
+export const refreshToken = async <T extends TResponse>(): Promise<T | ITokenUpdate> => {
   const token = localStorage.getItem('refreshToken') ?? '';
   if (token === '') {
     return Promise.reject('Empty refresh token');
