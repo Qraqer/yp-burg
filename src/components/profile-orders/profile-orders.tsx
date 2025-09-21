@@ -2,7 +2,7 @@ import { Loader } from '@/components/loader/loader';
 import { OrderCard } from '@/components/order-card/order-card';
 import { useSelector } from '@/services/store';
 import { ROUTES } from '@/utils/constants';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ProfileMenu } from '../profile-menu/profile-menu';
 
@@ -10,11 +10,9 @@ import type { FC } from 'react';
 
 import styles from './profile-orders.module.scss';
 
-// type TProfileOrdersProps = {}
-
-// export const ProfileOrders: FC<TProfileOrdersProps> = ({}): React.JSX.Element => {
 export const ProfileOrders: FC = (): React.JSX.Element => {
   const orders = useSelector((state) => state.ordersUser.orders);
+  const location = useLocation();
   const navigate = useNavigate();
 
   const openOrderDetails = (id: number): void => {
@@ -33,6 +31,7 @@ export const ProfileOrders: FC = (): React.JSX.Element => {
         {orders.map((order) => (
           <OrderCard
             order={order}
+            showStatus={true}
             key={order._id}
             onClick={() => openOrderDetails(order.number)}
           />

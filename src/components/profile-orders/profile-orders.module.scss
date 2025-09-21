@@ -2,14 +2,16 @@
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: 60px;
-  padding-top: 120px;
+  margin-top: 120px;
+  height: calc(100% - 120px);
+  padding-bottom: 32px;
 }
 
 .list {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   overflow: auto;
-  margin: 44px 0 0 0;
   padding: 0 8px 8px;
+  width: 100%;
 }

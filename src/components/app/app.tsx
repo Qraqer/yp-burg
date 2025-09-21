@@ -18,6 +18,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { AppLayout } from '../app-layout/app-layout';
 import { IngredientDetails } from '../burger-ingredients/ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
+import { OrderDetail } from '../order-detail/order-detail';
 import { OnlyAuthorized, OnlyGuest } from '../protected-route/protected-route';
 
 import type { FC } from 'react';
@@ -48,6 +49,7 @@ export const App: FC = (): React.JSX.Element => {
         <Route element={<AppLayout />}>
           <Route path={ROUTES.ingredients} element={<IngredientDetails />} />
           <Route path={ROUTES.feed} element={<Feed />} />
+          <Route path={ROUTES.feedOrder} element={<OrderDetail />} />
           <Route path={ROUTES.login} element={<OnlyGuest component={<Login />} />} />
           <Route
             path={ROUTES.register}
@@ -69,6 +71,7 @@ export const App: FC = (): React.JSX.Element => {
             path={ROUTES.profileOrders}
             element={<OnlyAuthorized component={<OrdersList />} />}
           />
+          <Route path={ROUTES.profileOrder} element={<OrderDetail />} />
           <Route path={ROUTES.error404} element={<Error404 />} />
           <Route index element={<Home />} />
         </Route>
@@ -81,6 +84,22 @@ export const App: FC = (): React.JSX.Element => {
             element={
               <Modal title="Детали ингредиента" onClose={closeModal}>
                 <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path={ROUTES.profileOrder}
+            element={
+              <Modal onClose={closeModal}>
+                <OrderDetail />
+              </Modal>
+            }
+          />
+          <Route
+            path={ROUTES.feedOrder}
+            element={
+              <Modal onClose={closeModal}>
+                <OrderDetail />
               </Modal>
             }
           />

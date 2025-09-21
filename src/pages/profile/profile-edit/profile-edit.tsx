@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from '@/services/store';
-import { /* getProfile, */ patchProfile } from '@/services/user/actions';
+import { patchProfile } from '@/services/user/actions';
 import { getUser } from '@/services/user/reducer';
 import {
   Button,

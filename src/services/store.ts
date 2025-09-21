@@ -3,17 +3,25 @@ import { useDispatch as uDispatch, useSelector as uSelector } from 'react-redux'
 
 import { burgerConstructorSlice } from './burger-contructor/reducer';
 import { burgerIngredientsSlice } from './burger-ingredients/reducer';
-import { ordersUserMiddleware, ordersUserSlice } from './orders-history/reducer';
+import { OrdersFeedActions } from './orders-feed/actions';
+import { ordersFeedSlice } from './orders-feed/reducer';
+import { OrdersUserActions } from './orders-history/actions';
+import { ordersUserSlice } from './orders-history/reducer';
 import { userSlice } from './user/reducer';
+import { wsMiddleware } from './ws';
 
 const rootReducer = combineSlices(
   burgerIngredientsSlice,
   burgerConstructorSlice,
   userSlice,
-  ordersUserSlice
+  ordersUserSlice,
+  ordersFeedSlice
 );
 
-export const middlewares = [ordersUserMiddleware];
+const ordersUserMiddleware = wsMiddleware(OrdersUserActions);
+const ordersFeedMiddleware = wsMiddleware(OrdersFeedActions);
+
+export const middlewares = [ordersUserMiddleware, ordersFeedMiddleware];
 
 export const store = configureStore({
   reducer: rootReducer,

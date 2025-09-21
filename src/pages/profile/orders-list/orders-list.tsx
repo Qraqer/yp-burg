@@ -4,7 +4,7 @@ import { useDispatch } from '@/services/store';
 import { API_POINTS } from '@/utils/constants';
 import { useEffect, type FC } from 'react';
 
-// import type { TFuncVoid } from '@/utils/types';
+import type { TFuncVoid } from '@/utils/types';
 
 // import styles from './orders-list.module.scss';
 
@@ -12,18 +12,16 @@ export const OrdersList: FC = (): React.JSX.Element => {
   const dispatch = useDispatch();
   const token = localStorage.getItem('accessToken');
 
-  useEffect((): void => {
-    console.log('OrdersUserActions.connect');
+  useEffect((): TFuncVoid => {
     dispatch(
       OrdersUserActions.connect(
-        `${API_POINTS.ordersUser}/?token=${token?.replace('Bearer ', '')}`
+        `${API_POINTS.ordersUser}?token=${token?.replace('Bearer ', '')}`
       )
     );
 
-    /* return (): void => {
-      console.log('OrdersUserActions.disconnect');
+    return (): void => {
       dispatch(OrdersUserActions.disconnect());
-    }; */
+    };
   }, [dispatch, token]);
 
   return <ProfileOrders />;

@@ -8,44 +8,42 @@ import type {
   Middleware,
 } from '@reduxjs/toolkit';
 
-type TWsActions<R, S> = {
+type TWsActions<R, M> = {
   connect: ActionCreatorWithPayload<string>;
   disconnect: ActionCreatorWithoutPayload;
-  sendMessage?: ActionCreatorWithPayload<S>;
-  onConnecting: ActionCreatorWithoutPayload;
-  onOpen: ActionCreatorWithoutPayload;
-  onClose: ActionCreatorWithoutPayload;
-  onError: ActionCreatorWithPayload<string>;
   onMessage: ActionCreatorWithPayload<R>;
+  onError: ActionCreatorWithPayload<string>;
+  sendMessage?: ActionCreatorWithPayload<M>;
+  onConnecting?: ActionCreatorWithoutPayload;
+  onOpen?: ActionCreatorWithoutPayload;
+  onClose?: ActionCreatorWithoutPayload;
 };
 
 const DELAY = 3000;
 
-export const wsMiddleware = <R, S>(
-  wsActions: TWsActions<R, S>,
+export const wsMiddleware = <Response, Message>(
+  wsActions: TWsActions<Response, Message>,
   needTokenRefresh = false
 ): Middleware<object, RootState> => {
   return (store) => {
     let socket: WebSocket | null = null;
     const {
       connect,
+      disconnect,
+      onMessage,
+      onError,
       sendMessage,
       onOpen,
       onClose,
-      onError,
-      onMessage,
       onConnecting,
-      disconnect,
     } = wsActions;
     let isConnected = false;
     let reconnectingTimer = 0;
-    let url = '';
+    const { dispatch } = store;
 
     return (next) => (action) => {
-      const { dispatch } = store;
-
       if (connect.match(action)) {
-        url = action.payload;
+        const url = action.payload;
         socket = new WebSocket(url);
         onConnecting && dispatch(onConnecting());
 
@@ -58,15 +56,25 @@ export const wsMiddleware = <R, S>(
           dispatch(onError('Error'));
         };
 
-        socket.onmessage = (event: MessageEvent): void => {
-          const data = String(event.data);
+        socket.onclose = (): void => {
+          onClose && dispatch(onClose());
 
+          if (isConnected) {
+            reconnectingTimer = window.setTimeout(() => {
+              dispatch(connect(url));
+            }, DELAY);
+          }
+        };
+
+        socket.onmessage = (event: MessageEvent): void => {
           try {
+            const data = String(event.data);
             const parsedData = JSON.parse(data) as Response;
 
             if (
               needTokenRefresh &&
               parsedData &&
+              typeof parsedData === 'object' &&
               'message' in parsedData &&
               parsedData.message === 'Invalid or missing token'
             ) {
@@ -88,19 +96,9 @@ export const wsMiddleware = <R, S>(
               return;
             }
 
-            dispatch(onMessage(parsedData as R));
+            dispatch(onMessage(parsedData));
           } catch (error) {
             dispatch(onError((error as { message: string }).message));
-          }
-        };
-
-        socket.onclose = (): void => {
-          dispatch(onClose());
-
-          if (isConnected) {
-            reconnectingTimer = window.setTimeout(() => {
-              dispatch(connect(url));
-            }, DELAY);
           }
         };
       }

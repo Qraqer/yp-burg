@@ -7,7 +7,6 @@ import { Navigate, useLocation } from 'react-router-dom';
 
 import type { FC, ReactElement } from 'react';
 import type { Location } from 'react-router-dom';
-// import { Nav } from '../nav/nav';
 
 type TProtectedProps = {
   onlyUnAuth?: boolean;

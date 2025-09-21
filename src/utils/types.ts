@@ -28,6 +28,10 @@ export type TResponse = {
   message?: string;
 };
 
+export type TOrderByIdResponse = TResponse & {
+  orders: TOrder[];
+};
+
 export type TIngredientsResponseData = {
   data: TIngredient[];
 } & TResponse;
@@ -131,6 +135,7 @@ export type TOrderResponse = {
 };
 
 export type TOrderRequest = TOrderResponse & TResponse;
+
 export enum EWebSocketStatus {
   CONNECTING = 'CONNECTING',
   ONLINE = 'ONLINE',
