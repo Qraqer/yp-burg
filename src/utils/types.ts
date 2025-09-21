@@ -127,6 +127,7 @@ export type TOrderResponse = {
   orders: TOrder[];
   total: number | undefined;
   totalToday: number | undefined;
+  error?: string | null;
 };
 
 export type TOrderRequest = TOrderResponse & TResponse;

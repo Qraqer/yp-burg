@@ -1,0 +1,15 @@
+.profile {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 60px;
+  padding-top: 120px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow: auto;
+  margin: 44px 0 0 0;
+  padding: 0 8px 8px;
+}

@@ -38,21 +38,20 @@ export const wsMiddleware = <R, S>(
       disconnect,
     } = wsActions;
     let isConnected = false;
-    let reconnectTimer = 0;
+    let reconnectingTimer = 0;
     let url = '';
 
     return (next) => (action) => {
       const { dispatch } = store;
 
       if (connect.match(action)) {
-        console.log('action', action);
         url = action.payload;
         socket = new WebSocket(url);
-        isConnected = true;
-        dispatch(onConnecting());
+        onConnecting && dispatch(onConnecting());
 
         socket.onopen = (): void => {
-          dispatch(onOpen());
+          onOpen && dispatch(onOpen());
+          isConnected = true;
         };
 
         socket.onerror = (): void => {
@@ -60,21 +59,21 @@ export const wsMiddleware = <R, S>(
         };
 
         socket.onmessage = (event: MessageEvent): void => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const { data } = event;
+          const data = String(event.data);
 
           try {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            const parsedData = JSON.parse(data) as Record<string, unknown>;
-            console.log('socket.onmessage', parsedData);
+            const parsedData = JSON.parse(data) as Response;
 
-            if (needTokenRefresh && parsedData.message === 'Invalid or missing token') {
+            if (
+              needTokenRefresh &&
+              parsedData &&
+              'message' in parsedData &&
+              parsedData.message === 'Invalid or missing token'
+            ) {
               refreshToken()
                 .then((refreshData) => {
                   const token = (refreshData as ITokenUpdate).accessToken;
                   if (!token) return;
-
-                  console.log('token', token.replace('Bearer ', ''));
 
                   const wssUrl = new URL(url);
                   wssUrl.searchParams.set('token', token.replace('Bearer ', ''));
@@ -89,7 +88,7 @@ export const wsMiddleware = <R, S>(
               return;
             }
 
-            dispatch(onMessage(parsedData));
+            dispatch(onMessage(parsedData as R));
           } catch (error) {
             dispatch(onError((error as { message: string }).message));
           }
@@ -99,7 +98,7 @@ export const wsMiddleware = <R, S>(
           dispatch(onClose());
 
           if (isConnected) {
-            reconnectTimer = window.setTimeout(() => {
+            reconnectingTimer = window.setTimeout(() => {
               dispatch(connect(url));
             }, DELAY);
           }
@@ -115,9 +114,9 @@ export const wsMiddleware = <R, S>(
       }
 
       if (socket && disconnect.match(action)) {
-        clearTimeout(reconnectTimer);
+        clearTimeout(reconnectingTimer);
         isConnected = false;
-        reconnectTimer = 0;
+        reconnectingTimer = 0;
         socket.close();
         socket = null;
       }

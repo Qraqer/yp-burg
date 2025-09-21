@@ -1,5 +1,2 @@
-declare const classNames: {
-  readonly profile: 'profile';
-  readonly list: 'list';
-};
+declare const classNames: {};
 export default classNames;
