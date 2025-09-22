@@ -39,15 +39,18 @@ export const OrdersList: FC = (): React.JSX.Element => {
 
   return (
     <div className={styles.list}>
-      {!orders.length && <Loader text="Ждём историю заказов..." />}
-      {orders.map((order) => (
-        <OrderCard
-          order={order}
-          showStatus={true}
-          key={order._id}
-          onClick={() => openOrderDetails(order.number)}
-        />
-      ))}
+      {orders.length > 0 ? (
+        orders.map((order) => (
+          <OrderCard
+            order={order}
+            showStatus={true}
+            key={order._id}
+            onClick={() => openOrderDetails(order.number)}
+          />
+        ))
+      ) : (
+        <Loader text="Ждём историю заказов..." />
+      )}
     </div>
   );
 };
