@@ -29,29 +29,26 @@ export const ProfileMenu: FC = (): React.JSX.Element => {
   };
 
   return (
-    <div className={styles.profile__leftside}>
-      <div className={styles.profile__menu}>
+    <div className={styles.leftside}>
+      <div className={styles.menu}>
         <NavLink
           to={ROUTES.profile}
-          className={`${styles.profile__menu_link} text_type_main-medium ${checkIsActive(ROUTES.profile) && styles.active}`}
+          className={`${styles.menu_link} text_type_main-medium ${checkIsActive(ROUTES.profile) && styles.active}`}
         >
           Профиль
         </NavLink>
         <NavLink
           to={ROUTES.profileOrders}
-          className={`${styles.profile__menu_link} text_type_main-medium ${checkIsActive(ROUTES.profileOrders) && styles.active}`}
+          className={`${styles.menu_link} text_type_main-medium ${checkIsActive(ROUTES.profileOrders) && styles.active}`}
         >
           История заказов
         </NavLink>
-        <div
-          className={`${styles.profile__menu_link} text_type_main-medium`}
-          onClick={logout}
-        >
+        <div className={`${styles.menu_link} text_type_main-medium`} onClick={logout}>
           Выход
         </div>
         {error !== '' && <div style={{ color: 'red' }}>{error}</div>}
       </div>
-      <div className={styles.profile__lefttext}>
+      <div className={styles.lefttext}>
         В этом разделе вы можете изменить свои персональные данные
       </div>
     </div>

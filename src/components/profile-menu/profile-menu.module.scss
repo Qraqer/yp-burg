@@ -1,25 +1,19 @@
-.profile {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 60px;
-  padding-top: 120px;
-}
-
-.profile__leftside {
+.leftside {
+  flex: 0 0 320px;
   display: flex;
   flex-direction: column;
   gap: 80px;
 }
 
-.profile__menu {
+.menu {
   display: grid;
 }
 
-.profile__lefttext {
+.lefttext {
   color: var(--text-inactive-color);
 }
 
-.profile__menu_link {
+.menu_link {
   color: var(--text-inactive-color);
   height: 64px;
   display: flex;
@@ -28,14 +22,14 @@
   cursor: pointer;
 }
 
-.profile__menu_link:hover {
+.menu_link:hover {
   color: var(--text-primary-color);
 }
 
-.profile__menu_link.active {
+.menu_link.active {
   color: var(--text-primary-color);
 }
 
-.profile__main {
+.main {
   width: 100%;
 }

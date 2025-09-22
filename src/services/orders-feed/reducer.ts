@@ -41,9 +41,7 @@ export const ordersFeedSlice = createSlice({
         OrdersFeedActions.onMessage,
         (state, action: PayloadAction<TOrderRequest>) => {
           state.orders =
-            action.payload.success && action.payload.orders
-              ? (state.orders = action.payload.orders)
-              : [];
+            action.payload.success && action.payload.orders ? action.payload.orders : [];
           state.total = action.payload.total;
           state.totalToday = action.payload.totalToday;
         }

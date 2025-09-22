@@ -9,7 +9,7 @@ export const Profile: FC = (): React.JSX.Element => {
   return (
     <div className={styles.profile}>
       <ProfileMenu />
-      <div className={styles.profile__main}>
+      <div className={styles.main}>
         <Outlet />
       </div>
     </div>
