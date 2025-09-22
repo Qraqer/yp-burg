@@ -1,63 +1,42 @@
-import { useDispatch, useSelector } from '@/services/store';
-import { getProfile } from '@/services/user/actions';
-import { getUser } from '@/services/user/reducer';
-import { SKIPBACK, ROUTES } from '@/utils/constants';
-import { useEffect } from 'react';
+import { useSelector } from '@/services/store';
+import { getAuth, getUser } from '@/services/user/reducer';
+import { ROUTES } from '@/utils/constants';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import type { FC, ReactElement } from 'react';
+import { Loader } from '../loader/loader';
+
+import type { FC } from 'react';
 import type { Location } from 'react-router-dom';
 
 type TProtectedProps = {
   onlyUnAuth?: boolean;
-  component: ReactElement;
+  children: React.JSX.Element;
 };
 
-const Protected: FC<TProtectedProps> = ({
+export const Protected: FC<TProtectedProps> = ({
   onlyUnAuth = false,
-  component,
+  children,
 }): React.JSX.Element => {
+  const isAuthChecked = useSelector(getAuth);
   const user = useSelector(getUser);
-  const dispatch = useDispatch();
   const location = useLocation();
-  location.state = (location.state as Record<string, Location>) ?? {};
 
-  useEffect(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
+  location.state = location.state as Record<string, Location>;
 
-  if (SKIPBACK.includes(location.pathname)) {
-    (location.state as Record<string, Location>).last = location;
+  if (!isAuthChecked) {
+    return <Loader text="Загружаем..." />;
   }
 
   if (!onlyUnAuth && !user) {
-    return location.pathname === ROUTES.login ? (
-      component
-    ) : (
-      <Navigate
-        to={ROUTES.login}
-        state={{
-          from: (location.state as Record<string, Location>).last ?? location,
-        }}
-      />
-    );
+    return <Navigate to={ROUTES.login} state={{ from: location }} />;
   }
 
   if (onlyUnAuth && user) {
     const { from } = (location.state as Record<string, Location>).from
       ? (location.state as Record<string, Location>)
       : { from: { pathname: ROUTES.index } };
-    return <Navigate to={from.pathname} replace />;
+    return <Navigate to={from?.pathname} />;
   }
 
-  return component;
+  return <>{children}</>;
 };
-
-type TUserNotAuthorizedProps = {
-  component: ReactElement;
-};
-
-export const OnlyAuthorized = Protected;
-export const OnlyGuest = ({ component }: TUserNotAuthorizedProps): ReactElement => (
-  <Protected onlyUnAuth={true} component={component} />
-);

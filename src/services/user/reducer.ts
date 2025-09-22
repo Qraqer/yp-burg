@@ -20,6 +20,7 @@ export const userSlice = createSlice({
     },
     setUser: (state, action: PayloadAction<IUser | null>) => {
       state.user = action.payload;
+      state.user && (state.isAuthChecked = true);
     },
     setForgotPassword: (state, action: PayloadAction<boolean>) => {
       state.forgotPassword = action.payload;

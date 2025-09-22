@@ -43,10 +43,10 @@ export const Feed: FC = (): React.JSX.Element => {
         <div className={styles.left}>
           {orders?.length > 0 ? (
             <div className={styles.list}>
-              {orders.map((order) => (
+              {orders.map((order, index) => (
                 <OrderCard
                   order={order}
-                  key={order._id}
+                  key={index}
                   onClick={() => openOrderDetails(order.number)}
                 />
               ))}

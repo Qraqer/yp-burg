@@ -31,7 +31,7 @@ export const OrderCard: FC<TOrderCardProps> = ({
   const ingredients = useSelector((state) => state.ingredients.ingredients);
 
   const ingredientsList =
-    order?.ingredients.map((id) => ingredients.find((item) => item._id === id)) ?? [];
+    order?.ingredients?.map((id) => ingredients.find((item) => item._id === id)) ?? [];
 
   const price = ingredientsList.reduce((acc, item) => acc + (item?.price ?? 0), 0);
 

@@ -5,12 +5,13 @@ import { Home } from '@/pages/home/home';
 import { Login } from '@/pages/login/login';
 import { OrdersList } from '@/pages/profile/orders-list/orders-list';
 import { Profile } from '@/pages/profile/profile';
+import { ProfileEdit } from '@/pages/profile/profile-edit/profile-edit';
 import { Register } from '@/pages/register/register';
 import { ResetPassword } from '@/pages/reset-password/reset';
 import { getIngredients } from '@/services/burger-ingredients/actions';
 import { setShowModal } from '@/services/burger-ingredients/reducer';
 import { useDispatch } from '@/services/store';
-import { checkUserAuth } from '@/services/user/actions';
+import { getProfile } from '@/services/user/actions';
 import { ROUTES } from '@/utils/constants';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -19,7 +20,7 @@ import { AppLayout } from '../app-layout/app-layout';
 import { IngredientDetails } from '../burger-ingredients/ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
 import { OrderDetail } from '../order-detail/order-detail';
-import { OnlyAuthorized, OnlyGuest } from '../protected-route/protected-route';
+import { Protected } from '../protected-route/protected-route';
 
 import type { FC } from 'react';
 
@@ -30,7 +31,7 @@ export const App: FC = (): React.JSX.Element => {
   const location = useLocation();
 
   useEffect(() => {
-    dispatch(checkUserAuth());
+    dispatch(getProfile());
     dispatch(getIngredients());
   }, [dispatch]);
 
@@ -47,33 +48,55 @@ export const App: FC = (): React.JSX.Element => {
     <>
       <Routes location={background ?? location}>
         <Route element={<AppLayout />}>
+          <Route index element={<Home />} />
           <Route path={ROUTES.ingredients} element={<IngredientDetails />} />
-          <Route path={ROUTES.feed} element={<Feed />} />
           <Route path={ROUTES.feedOrder} element={<OrderDetail />} />
-          <Route path={ROUTES.login} element={<OnlyGuest component={<Login />} />} />
+          <Route path={ROUTES.feed} element={<Feed />} />
+          <Route path={ROUTES.profileOrder} element={<OrderDetail />} />
+          <Route
+            path={ROUTES.profile}
+            element={
+              <Protected>
+                <Profile />
+              </Protected>
+            }
+          >
+            <Route index element={<ProfileEdit />} />
+            <Route path={ROUTES.profileOrders} element={<OrdersList />} />
+          </Route>
+          <Route
+            path={ROUTES.login}
+            element={
+              <Protected onlyUnAuth={true}>
+                <Login />
+              </Protected>
+            }
+          />
           <Route
             path={ROUTES.register}
-            element={<OnlyGuest component={<Register />} />}
+            element={
+              <Protected onlyUnAuth={true}>
+                <Register />
+              </Protected>
+            }
           />
           <Route
             path={ROUTES.forgotPassword}
-            element={<OnlyGuest component={<ForgotPassword />} />}
+            element={
+              <Protected onlyUnAuth={true}>
+                <ForgotPassword />
+              </Protected>
+            }
           />
           <Route
             path={ROUTES.resetPassword}
-            element={<OnlyGuest component={<ResetPassword />} />}
+            element={
+              <Protected onlyUnAuth={true}>
+                <ResetPassword />
+              </Protected>
+            }
           />
-          <Route
-            path={ROUTES.profile}
-            element={<OnlyAuthorized component={<Profile />} />}
-          />
-          <Route
-            path={ROUTES.profileOrders}
-            element={<OnlyAuthorized component={<OrdersList />} />}
-          />
-          <Route path={ROUTES.profileOrder} element={<OrderDetail />} />
           <Route path={ROUTES.error404} element={<Error404 />} />
-          <Route index element={<Home />} />
         </Route>
       </Routes>
 

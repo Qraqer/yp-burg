@@ -23,14 +23,14 @@ export const ROUTES = {
   ingredients: '/ingredients/:id',
   ingredientsBase: '/ingredients/',
   login: '/login',
-  profile: '/profile',
-  profileOrders: '/profile/orders',
   profileOrder: '/profile/orders/:id',
+  profile: '/profile',
+  profileOrders: 'orders',
   register: '/register',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
-  feed: '/feed',
   feedOrder: '/feed/:id',
+  feed: '/feed',
   error404: '*',
 };
 

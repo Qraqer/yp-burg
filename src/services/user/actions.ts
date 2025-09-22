@@ -2,7 +2,7 @@ import { API_POINTS } from '@/utils/constants';
 import { request } from '@/utils/request';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { setUser } from './reducer';
+import { setAuth, setUser } from './reducer';
 
 import type {
   IEmail,
@@ -22,6 +22,7 @@ export const checkUserAuth = createAsyncThunk(
     if (localStorage.getItem('accessToken')) {
       try {
         dispatch(getProfile());
+        dispatch(setAuth(true));
         return Promise.resolve('success');
       } catch (err) {
         localStorage.removeItem('refreshToken');
@@ -105,7 +106,7 @@ export const postRegistration = createAsyncThunk(
 
 export const postLogin = createAsyncThunk(
   'user/login',
-  async ({ email, password }: IUserAuth, { dispatch }) => {
+  async ({ email, password }: IUserAuth) => {
     try {
       const login = await request<IRegistration>(API_POINTS.login, {
         method: 'POST',
@@ -114,7 +115,6 @@ export const postLogin = createAsyncThunk(
       });
       localStorage.setItem('refreshToken', login.refreshToken ?? '');
       localStorage.setItem('accessToken', login.accessToken ?? '');
-      dispatch(setUser(login.user ?? null));
       return Promise.resolve(login.user);
     } catch (error) {
       return Promise.reject(error);
@@ -144,21 +144,25 @@ export const postLogout = createAsyncThunk('user/logout', async (_, { dispatch }
   }
 });
 
-export const postRefreshToken = createAsyncThunk('user/token', async () => {
-  try {
-    const token = localStorage.getItem('refreshToken');
-    const newToken = await request<ITokenUpdate>(API_POINTS.token, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json;charset=utf-8' },
-      body: JSON.stringify({ token }),
-    });
-    localStorage.setItem('refreshToken', newToken.refreshToken ?? '');
-    localStorage.setItem('accessToken', newToken.accessToken ?? '');
-    return newToken;
-  } catch (error) {
-    return Promise.reject(error);
+export const postRefreshToken = createAsyncThunk(
+  'user/token',
+  async (_, { dispatch }) => {
+    try {
+      const token = localStorage.getItem('refreshToken');
+      const newToken = await request<ITokenUpdate>(API_POINTS.token, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        body: JSON.stringify({ token }),
+      });
+      localStorage.setItem('refreshToken', newToken.refreshToken ?? '');
+      localStorage.setItem('accessToken', newToken.accessToken ?? '');
+      dispatch(setAuth(true));
+      return newToken;
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
-});
+);
 
 export const postForgotPassword = createAsyncThunk(
   'user/forgotPassword',
