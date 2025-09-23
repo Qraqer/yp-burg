@@ -1,5 +1,5 @@
 import { useSelector } from '@/services/store';
-import { getAuth, getUser } from '@/services/user/reducer';
+import { getAuth /* , getUser */ } from '@/services/user/reducer';
 import { ROUTES } from '@/utils/constants';
 import { Navigate, useLocation } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ export const Protected: FC<TProtectedProps> = ({
   children,
 }): React.JSX.Element => {
   const isAuthChecked = useSelector(getAuth);
-  const user = useSelector(getUser);
+  const user = useSelector((state) => state.user.user);
   const location = useLocation();
 
   location.state = location.state as Record<string, Location>;
@@ -32,7 +32,7 @@ export const Protected: FC<TProtectedProps> = ({
   }
 
   if (onlyUnAuth && user) {
-    const { from } = (location.state as Record<string, Location>).from
+    const { from } = (location.state as Record<string, Location>)?.from
       ? (location.state as Record<string, Location>)
       : { from: { pathname: ROUTES.index } };
     return <Navigate to={from?.pathname} />;

@@ -197,12 +197,11 @@ export const postUpdatePassword = createAsyncThunk(
 );
 
 export const getProfile = createAsyncThunk('user/profile', async (_, { dispatch }) => {
-  if (!localStorage.getItem('accessToken')) {
-    return Promise.reject('User is unauthorized');
-  }
+  dispatch(setAuth(true));
   const token = localStorage.getItem('accessToken') ?? '';
   if (token === '') {
-    return Promise.reject('No token found');
+    dispatch(setUser(null));
+    return Promise.reject('No profile found');
   }
   const userData = await requestWithCheck<IUserData>(API_POINTS.profile, {
     method: 'GET',
@@ -211,11 +210,12 @@ export const getProfile = createAsyncThunk('user/profile', async (_, { dispatch 
       Authorization: token,
     },
   });
-  if (userData.success) {
+  if (userData?.success) {
     dispatch(setUser(userData.user));
     return Promise.resolve(userData.user);
   }
-  return Promise.reject('Error refreshing token');
+  dispatch(setUser(null));
+  return Promise.reject('Error getting profile');
 });
 
 export const patchProfile = createAsyncThunk(

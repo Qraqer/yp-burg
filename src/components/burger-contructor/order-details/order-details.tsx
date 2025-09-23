@@ -10,15 +10,15 @@ export const OrderDetails: FC = (): React.JSX.Element => {
 
   return (
     <div className={styles.order__box}>
-      <div className={`text text_type_digits-large mt-4 mb-8 ${styles.order__id}`}>
-        {orderId}
-      </div>
       {orderLoading ? (
         <p className="mt-15 mb-15">
           <span className="text text_type_main-medium">Отправляем заказ...</span>
         </p>
       ) : (
         <>
+          <div className={`text text_type_digits-large mt-4 mb-8 ${styles.order__id}`}>
+            {orderId}
+          </div>
           <div className={`text text_type_main-medium ${styles.order__id_text}`}>
             идентификатор заказа
           </div>
