@@ -1,5 +1,5 @@
 import { useSelector } from '@/services/store';
-import { getAuth /* , getUser */ } from '@/services/user/reducer';
+import { getAuth } from '@/services/user/reducer';
 import { ROUTES } from '@/utils/constants';
 import { Navigate, useLocation } from 'react-router-dom';
 

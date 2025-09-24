@@ -11,7 +11,7 @@ import { ResetPassword } from '@/pages/reset-password/reset';
 import { getIngredients } from '@/services/burger-ingredients/actions';
 import { setShowModal } from '@/services/burger-ingredients/reducer';
 import { useDispatch } from '@/services/store';
-import { getProfile } from '@/services/user/actions';
+import { checkAuth } from '@/services/user/actions';
 import { ROUTES } from '@/utils/constants';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -31,7 +31,7 @@ export const App: FC = (): React.JSX.Element => {
   const location = useLocation();
 
   useEffect(() => {
-    dispatch(getProfile());
+    dispatch(checkAuth());
     dispatch(getIngredients());
   }, [dispatch]);
 
@@ -52,7 +52,14 @@ export const App: FC = (): React.JSX.Element => {
           <Route path={ROUTES.ingredients} element={<IngredientDetails />} />
           <Route path={ROUTES.feedOrder} element={<OrderDetail />} />
           <Route path={ROUTES.feed} element={<Feed />} />
-          <Route path={ROUTES.profileOrder} element={<OrderDetail />} />
+          <Route
+            path={ROUTES.profileOrder}
+            element={
+              <Protected>
+                <OrderDetail />
+              </Protected>
+            }
+          />
           <Route
             path={ROUTES.profile}
             element={
@@ -113,9 +120,11 @@ export const App: FC = (): React.JSX.Element => {
           <Route
             path={ROUTES.profileOrder}
             element={
-              <Modal onClose={closeModal}>
-                <OrderDetail />
-              </Modal>
+              <Protected>
+                <Modal onClose={closeModal}>
+                  <OrderDetail />
+                </Modal>
+              </Protected>
             }
           />
           <Route

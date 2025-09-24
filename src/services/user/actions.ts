@@ -1,5 +1,5 @@
 import { API_POINTS } from '@/utils/constants';
-import { request } from '@/utils/request';
+import { fetchDataWithToken, request } from '@/utils/request';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { setAuth, setUser } from './reducer';
@@ -195,6 +195,24 @@ export const postUpdatePassword = createAsyncThunk(
     }
   }
 );
+
+export const checkAuth = createAsyncThunk('user/getUser', async () => {
+  if (localStorage.getItem('accessToken')) {
+    return getUser().then(({ user }) => user);
+  }
+
+  return null;
+});
+
+export const getUser = async (): Promise<IUserData> => {
+  return await fetchDataWithToken<IUserData>(API_POINTS.profile, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: localStorage.getItem('accessToken') ?? '',
+    },
+  });
+};
 
 export const getProfile = createAsyncThunk('user/profile', async (_, { dispatch }) => {
   dispatch(setAuth(true));
