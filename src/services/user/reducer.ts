@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { postLogin, postLogout } from './actions';
+import { checkAuth, postLogin, postLogout } from './actions';
 
 import type { IUser, IUserState } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
@@ -20,6 +20,7 @@ export const userSlice = createSlice({
     },
     setUser: (state, action: PayloadAction<IUser | null>) => {
       state.user = action.payload;
+      state.user && (state.isAuthChecked = true);
     },
     setForgotPassword: (state, action: PayloadAction<boolean>) => {
       state.forgotPassword = action.payload;
@@ -38,6 +39,10 @@ export const userSlice = createSlice({
       })
       .addCase(postLogout.fulfilled, (state: IUserState) => {
         state.user = null;
+      })
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthChecked = true;
       });
   },
 });

@@ -1,0 +1,35 @@
+.leftside {
+  flex: 0 0 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.menu {
+  display: grid;
+}
+
+.lefttext {
+  color: var(--text-inactive-color);
+}
+
+.menu_link {
+  color: var(--text-inactive-color);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menu_link:hover {
+  color: var(--text-primary-color);
+}
+
+.menu_link.active {
+  color: var(--text-primary-color);
+}
+
+.main {
+  width: 100%;
+}

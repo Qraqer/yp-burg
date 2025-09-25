@@ -10,7 +10,9 @@ export const AppLayout: FC = (): React.JSX.Element => {
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Outlet />
+      <main className={`main pl-5 pr-5 ${styles.main}`}>
+        <Outlet />
+      </main>
     </div>
   );
 };

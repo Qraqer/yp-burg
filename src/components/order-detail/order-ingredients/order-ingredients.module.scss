@@ -1,0 +1,18 @@
+.box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.imgbox {
+  padding-left: 16px;
+}
+
+.ingredients {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 312px;
+  padding-right: 24px;
+  overflow: auto;
+}

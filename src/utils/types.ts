@@ -28,6 +28,10 @@ export type TResponse = {
   message?: string;
 };
 
+export type TOrderByIdResponse = TResponse & {
+  orders: TOrder[];
+};
+
 export type TIngredientsResponseData = {
   data: TIngredient[];
 } & TResponse;
@@ -108,3 +112,38 @@ export type IRegistration = {
 } & ITokenUpdate;
 
 export type TObject = Record<string, string>;
+
+export type TFuncVoid = () => void;
+
+export type TOrder = {
+  _id: string;
+  ingredients: string[];
+  name: string;
+  number: number;
+  status: keyof typeof EOrderStatus;
+  createdAt: string;
+  updatedAt: string;
+  owner: string;
+  __v: number;
+};
+
+export type TOrderResponse = {
+  orders: TOrder[];
+  total: number | undefined;
+  totalToday: number | undefined;
+  error?: string | null;
+};
+
+export type TOrderRequest = TOrderResponse & TResponse;
+
+export enum EWebSocketStatus {
+  CONNECTING = 'CONNECTING',
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+}
+
+export enum EOrderStatus {
+  pending,
+  created,
+  done,
+}

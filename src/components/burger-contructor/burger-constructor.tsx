@@ -78,11 +78,16 @@ export const BurgerConstructor: FC = (): React.JSX.Element => {
       >
         {bun && <Bun bun={bun} type="top" />}
         <div className={styles.constructor__view_list}>
-          <ul className={styles.components__list}>
-            {ingredients.map((item, index) => (
-              <Ingredient item={{ ...item, index }} key={item?.uuid} />
-            ))}
-          </ul>
+          {!ingredients.length && (
+            <div className={styles.empty_order}>Поместите сюда ингредиенты</div>
+          )}
+          {ingredients.length > 0 && (
+            <ul className={styles.components__list}>
+              {ingredients.map((item, index) => (
+                <Ingredient item={{ ...item, index }} key={item?.uuid} />
+              ))}
+            </ul>
+          )}
         </div>
         {bun && <Bun bun={bun} type="bottom" />}
       </div>

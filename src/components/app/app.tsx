@@ -1,14 +1,17 @@
 import { Error404 } from '@/pages/error404/error404';
+import { Feed } from '@/pages/feed/feed';
 import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
 import { Login } from '@/pages/login/login';
+import { OrdersList } from '@/pages/profile/orders-list/orders-list';
 import { Profile } from '@/pages/profile/profile';
+import { ProfileEdit } from '@/pages/profile/profile-edit/profile-edit';
 import { Register } from '@/pages/register/register';
 import { ResetPassword } from '@/pages/reset-password/reset';
 import { getIngredients } from '@/services/burger-ingredients/actions';
 import { setShowModal } from '@/services/burger-ingredients/reducer';
 import { useDispatch } from '@/services/store';
-import { checkUserAuth } from '@/services/user/actions';
+import { checkAuth } from '@/services/user/actions';
 import { ROUTES } from '@/utils/constants';
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -16,7 +19,8 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { AppLayout } from '../app-layout/app-layout';
 import { IngredientDetails } from '../burger-ingredients/ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
-import { OnlyAuthorized, OnlyGuest } from '../protected-route/protected-route';
+import { OrderDetail } from '../order-detail/order-detail';
+import { Protected } from '../protected-route/protected-route';
 
 import type { FC } from 'react';
 
@@ -27,7 +31,7 @@ export const App: FC = (): React.JSX.Element => {
   const location = useLocation();
 
   useEffect(() => {
-    dispatch(checkUserAuth());
+    dispatch(checkAuth());
     dispatch(getIngredients());
   }, [dispatch]);
 
@@ -44,26 +48,62 @@ export const App: FC = (): React.JSX.Element => {
     <>
       <Routes location={background ?? location}>
         <Route element={<AppLayout />}>
+          <Route index element={<Home />} />
           <Route path={ROUTES.ingredients} element={<IngredientDetails />} />
-          <Route path={ROUTES.login} element={<OnlyGuest component={<Login />} />} />
+          <Route path={ROUTES.feedOrder} element={<OrderDetail />} />
+          <Route path={ROUTES.feed} element={<Feed />} />
           <Route
-            path={ROUTES.register}
-            element={<OnlyGuest component={<Register />} />}
-          />
-          <Route
-            path={ROUTES.forgotPassword}
-            element={<OnlyGuest component={<ForgotPassword />} />}
-          />
-          <Route
-            path={ROUTES.resetPassword}
-            element={<OnlyGuest component={<ResetPassword />} />}
+            path={ROUTES.profileOrder}
+            element={
+              <Protected>
+                <OrderDetail />
+              </Protected>
+            }
           />
           <Route
             path={ROUTES.profile}
-            element={<OnlyAuthorized component={<Profile />} />}
+            element={
+              <Protected>
+                <Profile />
+              </Protected>
+            }
+          >
+            <Route index element={<ProfileEdit />} />
+            <Route path={ROUTES.profileOrders} element={<OrdersList />} />
+          </Route>
+          <Route
+            path={ROUTES.login}
+            element={
+              <Protected onlyUnAuth={true}>
+                <Login />
+              </Protected>
+            }
+          />
+          <Route
+            path={ROUTES.register}
+            element={
+              <Protected onlyUnAuth={true}>
+                <Register />
+              </Protected>
+            }
+          />
+          <Route
+            path={ROUTES.forgotPassword}
+            element={
+              <Protected onlyUnAuth={true}>
+                <ForgotPassword />
+              </Protected>
+            }
+          />
+          <Route
+            path={ROUTES.resetPassword}
+            element={
+              <Protected onlyUnAuth={true}>
+                <ResetPassword />
+              </Protected>
+            }
           />
           <Route path={ROUTES.error404} element={<Error404 />} />
-          <Route index element={<Home />} />
         </Route>
       </Routes>
 
@@ -74,6 +114,24 @@ export const App: FC = (): React.JSX.Element => {
             element={
               <Modal title="Детали ингредиента" onClose={closeModal}>
                 <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path={ROUTES.profileOrder}
+            element={
+              <Protected>
+                <Modal onClose={closeModal}>
+                  <OrderDetail />
+                </Modal>
+              </Protected>
+            }
+          />
+          <Route
+            path={ROUTES.feedOrder}
+            element={
+              <Modal onClose={closeModal}>
+                <OrderDetail />
               </Modal>
             }
           />

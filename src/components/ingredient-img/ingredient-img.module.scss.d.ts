@@ -1,5 +1,5 @@
 declare const classNames: {
-  readonly profile: 'profile';
-  readonly main: 'main';
+  readonly box: 'box';
+  readonly img: 'img';
 };
 export default classNames;

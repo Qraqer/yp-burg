@@ -1,5 +1,4 @@
 declare const classNames: {
-  readonly profile: 'profile';
-  readonly main: 'main';
+  readonly loader: 'loader';
 };
 export default classNames;

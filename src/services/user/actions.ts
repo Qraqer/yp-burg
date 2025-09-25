@@ -1,8 +1,8 @@
 import { API_POINTS } from '@/utils/constants';
-import { request } from '@/utils/request';
+import { fetchDataWithToken, request } from '@/utils/request';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { setUser } from './reducer';
+import { setAuth, setUser } from './reducer';
 
 import type {
   IEmail,
@@ -22,6 +22,7 @@ export const checkUserAuth = createAsyncThunk(
     if (localStorage.getItem('accessToken')) {
       try {
         dispatch(getProfile());
+        dispatch(setAuth(true));
         return Promise.resolve('success');
       } catch (err) {
         localStorage.removeItem('refreshToken');
@@ -39,7 +40,7 @@ const catchTokenError = <T>(promise: Promise<T>): Promise<[undefined, T] | [Erro
     .catch((error) => [error]);
 };
 
-const refreshToken = async <T extends TResponse>(): Promise<T | ITokenUpdate> => {
+export const refreshToken = async <T extends TResponse>(): Promise<T | ITokenUpdate> => {
   const token = localStorage.getItem('refreshToken') ?? '';
   if (token === '') {
     return Promise.reject('Empty refresh token');
@@ -105,7 +106,7 @@ export const postRegistration = createAsyncThunk(
 
 export const postLogin = createAsyncThunk(
   'user/login',
-  async ({ email, password }: IUserAuth, { dispatch }) => {
+  async ({ email, password }: IUserAuth) => {
     try {
       const login = await request<IRegistration>(API_POINTS.login, {
         method: 'POST',
@@ -114,7 +115,6 @@ export const postLogin = createAsyncThunk(
       });
       localStorage.setItem('refreshToken', login.refreshToken ?? '');
       localStorage.setItem('accessToken', login.accessToken ?? '');
-      dispatch(setUser(login.user ?? null));
       return Promise.resolve(login.user);
     } catch (error) {
       return Promise.reject(error);
@@ -144,21 +144,25 @@ export const postLogout = createAsyncThunk('user/logout', async (_, { dispatch }
   }
 });
 
-export const postRefreshToken = createAsyncThunk('user/token', async () => {
-  try {
-    const token = localStorage.getItem('refreshToken');
-    const newToken = await request<ITokenUpdate>(API_POINTS.token, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json;charset=utf-8' },
-      body: JSON.stringify({ token }),
-    });
-    localStorage.setItem('refreshToken', newToken.refreshToken ?? '');
-    localStorage.setItem('accessToken', newToken.accessToken ?? '');
-    return newToken;
-  } catch (error) {
-    return Promise.reject(error);
+export const postRefreshToken = createAsyncThunk(
+  'user/token',
+  async (_, { dispatch }) => {
+    try {
+      const token = localStorage.getItem('refreshToken');
+      const newToken = await request<ITokenUpdate>(API_POINTS.token, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        body: JSON.stringify({ token }),
+      });
+      localStorage.setItem('refreshToken', newToken.refreshToken ?? '');
+      localStorage.setItem('accessToken', newToken.accessToken ?? '');
+      dispatch(setAuth(true));
+      return newToken;
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
-});
+);
 
 export const postForgotPassword = createAsyncThunk(
   'user/forgotPassword',
@@ -192,13 +196,30 @@ export const postUpdatePassword = createAsyncThunk(
   }
 );
 
-export const getProfile = createAsyncThunk('user/profile', async (_, { dispatch }) => {
-  if (!localStorage.getItem('accessToken')) {
-    return Promise.reject('User is unauthorized');
+export const checkAuth = createAsyncThunk('user/getUser', async () => {
+  if (localStorage.getItem('accessToken')) {
+    return getUser().then(({ user }) => user);
   }
+
+  return null;
+});
+
+export const getUser = async (): Promise<IUserData> => {
+  return await fetchDataWithToken<IUserData>(API_POINTS.profile, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: localStorage.getItem('accessToken') ?? '',
+    },
+  });
+};
+
+export const getProfile = createAsyncThunk('user/profile', async (_, { dispatch }) => {
+  dispatch(setAuth(true));
   const token = localStorage.getItem('accessToken') ?? '';
   if (token === '') {
-    return Promise.reject('No token found');
+    dispatch(setUser(null));
+    return Promise.reject('No profile found');
   }
   const userData = await requestWithCheck<IUserData>(API_POINTS.profile, {
     method: 'GET',
@@ -207,11 +228,12 @@ export const getProfile = createAsyncThunk('user/profile', async (_, { dispatch 
       Authorization: token,
     },
   });
-  if (userData.success) {
+  if (userData?.success) {
     dispatch(setUser(userData.user));
     return Promise.resolve(userData.user);
   }
-  return Promise.reject('Error refreshing token');
+  dispatch(setUser(null));
+  return Promise.reject('Error getting profile');
 });
 
 export const patchProfile = createAsyncThunk(
