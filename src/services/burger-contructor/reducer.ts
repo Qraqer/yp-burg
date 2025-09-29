@@ -2,10 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { createOrder } from './actions';
 
-import type { TOrderIngredient, TOrderState /* TIngredient */ } from '@/utils/types';
+import type { TOrderIngredient, TOrderState } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: TOrderState = {
+export const initialState: TOrderState = {
   orderBun: null,
   orderItems: [],
   orderId: null,

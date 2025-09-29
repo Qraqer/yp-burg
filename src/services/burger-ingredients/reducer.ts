@@ -5,7 +5,7 @@ import { getIngredients } from './actions';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { TIngredientsState, TIngredient } from '@utils/types';
 
-const initialState: TIngredientsState = {
+export const initialState: TIngredientsState = {
   ingredients: [],
   error: null,
   loading: false,
