@@ -21,7 +21,9 @@ Cypress.Commands.add('fillOrder', () => {
 });
 
 Cypress.Commands.add('checkModal', (action = 'overlay') => {
-  cy.get('[data-testid="modal"]').should('exist');
+  cy.get('[data-testid="modal"]').as('modal');
+
+  cy.get('@modal').should('exist');
   switch (action) {
     case 'overlay':
       cy.get('[data-testid="modal_overlay"]').click('topLeft', {force: true});
@@ -30,5 +32,5 @@ Cypress.Commands.add('checkModal', (action = 'overlay') => {
       cy.get('[data-testid="modal_close"]').click();
       break;
   }
-  cy.get('[data-testid="modal"]').should('not.exist');
+  cy.get('@modal').should('not.exist');
 });

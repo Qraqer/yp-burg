@@ -114,7 +114,7 @@ export const BurgerConstructor: FC = (): React.JSX.Element => {
           size="large"
           onClick={orderCreate}
           disabled={!ingredients.length || isLoading}
-          data-testid="order_button"
+          data-testid="submit_order_button"
         >
           Оформить заказ
         </Button>

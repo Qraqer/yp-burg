@@ -27,7 +27,7 @@ describe('Компонент BurgerConstructor', () => {
 
     const dragZone = screen.getByTestId('drag_and_drop_area');
     const ingredientsPlace = screen.getByTestId('ingredients_place');
-    const button = screen.getByTestId('order_button');
+    const button = screen.getByTestId('submit_order_button');
 
     expect(dragZone).toBeInTheDocument();
     expect(ingredientsPlace).toBeInTheDocument();
