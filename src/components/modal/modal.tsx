@@ -26,10 +26,14 @@ export const Modal: FC<IModalProps> = ({
   return createPortal(
     <div className={styles.modal}>
       <ModalOverlay onClick={onClose} />
-      <div className={styles.modal__panel}>
+      <div className={styles.modal__panel} data-testid="modal">
         <div className={styles.modal__header}>
           <h3 className="text text_type_main-large">{title}</h3>
-          <button className={styles.modal__close} onClick={onClose}>
+          <button
+            className={styles.modal__close}
+            onClick={onClose}
+            data-testid="modal_close"
+          >
             <CloseIcon type="primary" />
           </button>
         </div>

@@ -25,6 +25,7 @@ export const BurgerConstructor: FC = (): React.JSX.Element => {
   const dispatch = useDispatch();
   const dropRef = useRef(null);
   const user = useSelector(getUser);
+  const isLoading = useSelector((state) => state.order.orderLoading);
   const navigate = useNavigate();
 
   const dropHandler = (item: TIngredient): void => {
@@ -69,7 +70,11 @@ export const BurgerConstructor: FC = (): React.JSX.Element => {
   };
 
   return (
-    <section className={styles.burger__constructor} ref={dropRef}>
+    <section
+      className={styles.burger__constructor}
+      ref={dropRef}
+      data-testid={'drag_and_drop_area'}
+    >
       <div
         ref={dropRef}
         className={`${styles.constructor__list} ${
@@ -77,7 +82,7 @@ export const BurgerConstructor: FC = (): React.JSX.Element => {
         } ${isOver && styles.components__list_hover}`}
       >
         {bun && <Bun bun={bun} type="top" />}
-        <div className={styles.constructor__view_list}>
+        <div className={styles.constructor__view_list} data-testid="ingredients_place">
           {!ingredients.length && (
             <div className={styles.empty_order}>Поместите сюда ингредиенты</div>
           )}
@@ -92,21 +97,28 @@ export const BurgerConstructor: FC = (): React.JSX.Element => {
         {bun && <Bun bun={bun} type="bottom" />}
       </div>
 
-      {totalPrice && totalPrice > 0 ? (
-        <div className={styles.order}>
+      <div className={styles.order}>
+        {totalPrice && totalPrice > 0 ? (
           <div className={styles.order__total}>
             <span className={`${styles.order__sum} text text_type_digits-medium`}>
               {totalPrice}
             </span>
             <CurrencyIcon type="primary" />
           </div>
-          <Button htmlType="button" type="primary" size="large" onClick={orderCreate}>
-            Оформить заказ
-          </Button>
-        </div>
-      ) : (
-        <></>
-      )}
+        ) : (
+          <></>
+        )}
+        <Button
+          htmlType="button"
+          type="primary"
+          size="large"
+          onClick={orderCreate}
+          disabled={!ingredients.length || isLoading}
+          data-testid="submit_order_button"
+        >
+          Оформить заказ
+        </Button>
+      </div>
 
       {orderModal && (
         <Modal onClose={closeOrderModal}>

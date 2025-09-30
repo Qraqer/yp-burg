@@ -5,7 +5,7 @@ import { OrdersFeedActions } from './actions';
 import type { TOrder, TOrderRequest, TOrderResponse } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: TOrderResponse = {
+export const initialState: TOrderResponse = {
   orders: [],
   total: 0,
   totalToday: 0,

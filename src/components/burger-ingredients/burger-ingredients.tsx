@@ -72,7 +72,7 @@ export const BurgerIngredients: FC = (): React.JSX.Element => {
   return (
     <section className={styles.burger_ingredients}>
       <nav>
-        <ul className={styles.menu}>
+        <ul className={styles.menu} data-testid={'tabs'}>
           {tabsList.map((tab) => (
             <Tab
               key={tab.id}
@@ -87,7 +87,11 @@ export const BurgerIngredients: FC = (): React.JSX.Element => {
       </nav>
 
       <section className={styles.category__list}>
-        <div className={styles.view__list} ref={refBox}>
+        <div
+          className={styles.view__list}
+          ref={refBox}
+          data-testid={'burger_ingredients_list'}
+        >
           {tabsList.map((tab) => {
             return (
               <div className={styles.category__box} key={tab.id} ref={tab.thisRef}>
@@ -97,10 +101,11 @@ export const BurgerIngredients: FC = (): React.JSX.Element => {
                 <div className={styles.item__list}>
                   {ingredients
                     .filter((item) => item.type === tab.id)
-                    .map((item) => (
+                    .map((item, index) => (
                       <IngredientItem
                         key={item._id}
                         ingredient={item}
+                        test={`ingredient_${item.type}_${index}`}
                         onClick={() => showCurrentIngredient(item)}
                       />
                     ))}

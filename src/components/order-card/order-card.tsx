@@ -14,6 +14,7 @@ import styles from './order-card.module.scss';
 type TOrderCardProps = {
   order: TOrder;
   showStatus?: boolean;
+  index?: number;
   onClick?: () => void;
 };
 
@@ -26,6 +27,7 @@ const orderStatus = {
 export const OrderCard: FC<TOrderCardProps> = ({
   order,
   showStatus = false,
+  index = '',
   onClick,
 }): React.JSX.Element => {
   const ingredients = useSelector((state) => state.ingredients.ingredients);
@@ -38,7 +40,11 @@ export const OrderCard: FC<TOrderCardProps> = ({
   return (
     <>
       {order.name && (
-        <div className={styles.card} onClick={onClick}>
+        <div
+          className={styles.card}
+          onClick={onClick}
+          data-testid={`order_card_${index}`}
+        >
           <div className={styles.title}>
             <div className="text text_type_digits-default">#{order.number}</div>
             <FormattedDate

@@ -46,6 +46,7 @@ export const Login: FC = (): React.JSX.Element => {
             placeholder={'E-mail'}
             onChange={onChange}
             autoComplete="email"
+            data-testid="email_login_input"
           />
           <PasswordInput
             name={'password'}
@@ -53,6 +54,7 @@ export const Login: FC = (): React.JSX.Element => {
             placeholder={'Пароль'}
             onChange={onChange}
             autoComplete="current-password"
+            data-testid="password_login_input"
           />
           {error !== '' && <div style={{ color: 'red' }}>{error}</div>}
           <Button
@@ -60,6 +62,7 @@ export const Login: FC = (): React.JSX.Element => {
             type="primary"
             size="medium"
             disabled={!(value.email && value.password)}
+            data-testid="login_submit_button"
           >
             Войти
           </Button>

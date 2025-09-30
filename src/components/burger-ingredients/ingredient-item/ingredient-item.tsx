@@ -10,11 +10,13 @@ import styles from './ingredient-item.module.css';
 
 type IIngredientItemProps = {
   ingredient: TIngredient;
+  test: string;
   onClick: () => void;
 };
 
 export const IngredientItem: FC<IIngredientItemProps> = ({
   ingredient,
+  test,
   onClick,
 }): React.JSX.Element => {
   const { image, name, price } = ingredient;
@@ -37,7 +39,7 @@ export const IngredientItem: FC<IIngredientItemProps> = ({
   drag(dragRef);
 
   return (
-    <div className={styles.item} onClick={onClick} ref={dragRef}>
+    <div className={styles.item} onClick={onClick} ref={dragRef} data-testid={test}>
       {counter > 0 && <Counter count={counter} size="default" extraClass="m-1" />}
       <div className={styles.item__img}>
         <img src={image} alt={name} width="240" height="120"></img>
@@ -46,7 +48,12 @@ export const IngredientItem: FC<IIngredientItemProps> = ({
         <span className="text text_type_digits-small mr-2">{price}</span>
         <CurrencyIcon type="primary" />
       </div>
-      <div className={`text text_type_main-default ${styles.item__name}`}>{name}</div>
+      <div
+        className={`text text_type_main-default ${styles.item__name}`}
+        data-testid={`${test}_title`}
+      >
+        {name}
+      </div>
     </div>
   );
 };

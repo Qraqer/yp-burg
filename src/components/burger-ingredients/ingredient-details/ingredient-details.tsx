@@ -48,7 +48,10 @@ export const IngredientDetails: FC = (): React.JSX.Element => {
       <div className={styles.details__img}>
         <img src={ingredient.image_large} alt={ingredient.name} />
       </div>
-      <div className={`text text_type_main-medium mb-8 ${styles.details__name}`}>
+      <div
+        className={`text text_type_main-medium mb-8 ${styles.details__name}`}
+        data-testid="ingredient_details_title"
+      >
         {ingredient.name}
       </div>
       <ul className={styles.details__nutrition}>
