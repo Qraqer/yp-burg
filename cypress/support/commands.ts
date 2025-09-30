@@ -1,37 +1,34 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+Cypress.Commands.add('dragAndDrop', (sourceSelector, targetSelector) => {
+  cy.get(sourceSelector).trigger('dragstart');
+  cy.get(targetSelector).trigger('dragover').trigger('drop', { force: true });
+});
+
+Cypress.Commands.add('fillOrder', () => {
+  cy.dragAndDrop(
+    '[data-testid="ingredient_bun_1"]',
+    '[data-testid="drag_and_drop_area"]'
+  );
+  cy.dragAndDrop(
+    '[data-testid="ingredient_main_1"]',
+    '[data-testid="drag_and_drop_area"]'
+  );
+  cy.dragAndDrop(
+    '[data-testid="ingredient_sauce_1"]',
+    '[data-testid="drag_and_drop_area"]'
+  );
+});
+
+Cypress.Commands.add('checkModal', (action = 'overlay') => {
+  cy.get('[data-testid="modal"]').should('exist');
+  switch (action) {
+    case 'overlay':
+      cy.get('[data-testid="modal_overlay"]').click('topLeft', {force: true});
+      break;
+    case 'close':
+      cy.get('[data-testid="modal_close"]').click();
+      break;
+  }
+  cy.get('[data-testid="modal"]').should('not.exist');
+});

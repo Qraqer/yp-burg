@@ -115,9 +115,9 @@ export const postLogin = createAsyncThunk(
       });
       localStorage.setItem('refreshToken', login.refreshToken ?? '');
       localStorage.setItem('accessToken', login.accessToken ?? '');
-      return Promise.resolve(login.user);
+      return login.user;
     } catch (error) {
-      return Promise.reject(error);
+      return error;
     }
   }
 );

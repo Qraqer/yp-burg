@@ -1,0 +1,9 @@
+{
+    "success": true,
+    "accessToken": "Bearer eyJhbGc",
+    "refreshToken": "ce2f36127e6117",
+    "user": {
+        "email": "qraq@suprnode.ru",
+        "name": "Тестер"
+    }
+}

@@ -47,6 +47,7 @@ export const Feed: FC = (): React.JSX.Element => {
                 <OrderCard
                   order={order}
                   key={index}
+                  index={index}
                   onClick={() => openOrderDetails(order.number)}
                 />
               ))}

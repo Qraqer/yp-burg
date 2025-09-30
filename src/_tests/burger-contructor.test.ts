@@ -1,25 +1,13 @@
 import { createOrder } from '@/services/burger-contructor/actions';
 import { ingredients } from '@/utils/ingredients';
-import { configureStore } from '@reduxjs/toolkit';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
-  addBun,
-  addIngredient,
   burgerConstructorSlice,
   initialState,
 } from '../services/burger-contructor/reducer';
 
-import type { TOrderIngredient, TOrderState } from '@/utils/types';
-import type {
-  EnhancedStore,
-  StoreEnhancer,
-  ThunkDispatch,
-  Tuple,
-  UnknownAction,
-} from '@reduxjs/toolkit';
-
-// import * as api from '@/utils/request';
+import type { TOrderIngredient } from '@/utils/types';
 
 const bun: TOrderIngredient = {
   ...ingredients.find(
@@ -37,31 +25,6 @@ const ingredient2: TOrderIngredient = {
 };
 
 describe('Тестирование слайса BurgerConstructor', () => {
-  let state: EnhancedStore<
-    { order: TOrderState },
-    UnknownAction,
-    Tuple<
-      [
-        StoreEnhancer<{
-          dispatch: ThunkDispatch<{ order: TOrderState }, undefined, UnknownAction>;
-        }>,
-        StoreEnhancer,
-      ]
-    >
-  >;
-
-  beforeEach(() => {
-    state = configureStore({
-      reducer: {
-        order: burgerConstructorSlice.reducer,
-      },
-    });
-  });
-
-  afterEach(() => {
-    vi.resetAllMocks();
-  });
-
   it('Неизвестный action: возвращает начальное значение для BurgerConstructor', () => {
     expect(
       burgerConstructorSlice.reducer(undefined, {
@@ -150,60 +113,42 @@ describe('Тестирование слайса BurgerConstructor', () => {
   });
 
   it('Заказ ожидает создания', () => {
-    const mockResponseData = {
-      data: [ingredient],
+    const action = {
+      type: createOrder.pending.type,
     };
-
-    const request = { data: (): Record<string, unknown> => mockResponseData };
-
-    vi.spyOn(request, 'data').mockResolvedValue(mockResponseData);
-    state.dispatch(createOrder());
-
-    const { orderLoading } = state.getState().order;
-
-    expect(orderLoading).toBe(true);
+    expect(burgerConstructorSlice.reducer(initialState, action)).toEqual({
+      ...initialState,
+      orderLoading: true,
+      orderError: null,
+    });
   });
 
-  it('Заказ создан', async () => {
-    state.dispatch(addBun(bun));
-    state.dispatch(addIngredient(ingredient));
-
-    const mockResponseOrder = {
-      success: true,
-      order: { number: 12345 },
+  it('Заказ создан', () => {
+    const orderId = 12345;
+    const action = {
+      type: createOrder.fulfilled.type,
+      payload: orderId,
     };
-
-    const requestOrder = { order: (): Record<string, unknown> => ({}) };
-
-    vi.spyOn(requestOrder, 'order').mockResolvedValue(mockResponseOrder);
-    await state.dispatch(createOrder());
-
-    const { /* orderId, */ orderLoading } = state.getState().order;
-
-    // expect(orderId).toBe(12345);
-    expect(orderLoading).toBe(false);
+    expect(burgerConstructorSlice.reducer(initialState, action)).toEqual({
+      ...initialState,
+      orderId: orderId,
+      orderLoading: false,
+      orderError: null,
+    });
   });
 
-  /* it('Ошибка создания заказа', async () => {
-    // const errorString = 'No order';
-    // const action = {
-    //   type: 'order/createOrder/rejected',
-    //     error: {
-    //       message: errorString
-    //     }
-    // };
-    // const state = burgerConstructorSlice.reducer(undefined, action);
-    // expect(state.orderError).toBe(errorString);
-
-    // const requestError = {
-    //   error: () => ({ error: 'No order'})
-    // }
-
-    vi.spyOn(api, 'request').mockRejectedValue(new Error('No order'));
-    state.dispatch(createOrder());
-
-    const { orderError } = state.getState().order;
-
-    expect(orderError).toEqual('No order');
-  }) */
+  it('Ошибка создания заказа', () => {
+    const errorMessage = 'No order';
+    const action = {
+      type: createOrder.rejected.type,
+      error: {
+        message: errorMessage,
+      },
+    };
+    expect(burgerConstructorSlice.reducer(initialState, action)).toEqual({
+      ...initialState,
+      orderLoading: false,
+      orderError: errorMessage,
+    });
+  });
 });

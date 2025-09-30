@@ -1,3 +1,4 @@
+import { getIngredients } from '@/services/burger-ingredients/actions';
 import {
   burgerIngredientsSlice,
   initialState,
@@ -48,34 +49,45 @@ describe('Тестирование слайса в BurgerIngredients', () => {
     });
   });
 
-  /* it('Загружаем список ингредиентов', () => {
-    const action = { type: 'order/getIngredients/pending' };
-    const state = burgerIngredientsSlice.reducer(undefined, action);
-    expect(state.loading).toBe(true);
-  })
-
-  it('Загружаем список ингредиентов', () => {
-    const data = [ ingredient ];
-
+  it('Ожидаем загрузку ингредиентов', () => {
     const action = {
-      type: 'order/getIngredients/pending',
+      type: getIngredients.pending.type,
+    };
+
+    expect(burgerIngredientsSlice.reducer(initialState, action)).toEqual({
+      ...initialState,
+      loading: true,
+    });
+  });
+
+  it('Загрузка ингредиентов успешно выполнена', () => {
+    const action = {
+      type: getIngredients.fulfilled.type,
       payload: {
-        data: data
-      }
+        data: [ingredient],
+      },
     };
-    const state = burgerIngredientsSlice.reducer(undefined, action);
-    expect(state.ingredients).toBe(data);
-  })
 
-  it('Сбой загрузки ингредиентов', () => {
-    const errorMessage = 'Error in requesting ingredients';
+    expect(burgerIngredientsSlice.reducer(initialState, action)).toEqual({
+      ...initialState,
+      loading: false,
+      ingredients: [ingredient],
+    });
+  });
+
+  it('Ошибка загрузки ингредиентов', () => {
+    const errorMessage = 'Unable to get ingredients';
     const action = {
-      type: 'order/getIngredients/rejected',
-      erro: {
-        message: errorMessage
-      }
+      type: getIngredients.rejected.type,
+      error: {
+        message: errorMessage,
+      },
     };
-    const state = burgerIngredientsSlice.reducer(undefined, action);
-    expect(state.error).toBe(errorMessage);
-  }) */
+
+    expect(burgerIngredientsSlice.reducer(initialState, action)).toEqual({
+      ...initialState,
+      loading: false,
+      error: errorMessage,
+    });
+  });
 });

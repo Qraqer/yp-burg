@@ -5,7 +5,7 @@ import { checkAuth, postLogin, postLogout } from './actions';
 import type { IUser, IUserState } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: IUserState = {
+export const initialState: IUserState = {
   user: null,
   isAuthChecked: false,
   forgotPassword: false,
@@ -41,7 +41,7 @@ export const userSlice = createSlice({
         state.user = null;
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload ?? null;
         state.isAuthChecked = true;
       });
   },

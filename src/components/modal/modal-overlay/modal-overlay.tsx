@@ -7,5 +7,11 @@ type IModalOverlayProps = {
 };
 
 export const ModalOverlay: FC<IModalOverlayProps> = ({ onClick }): React.JSX.Element => {
-  return <div className={styles.modal__overlay} onClick={onClick}></div>;
+  return (
+    <div
+      className={styles.modal__overlay}
+      onClick={onClick}
+      data-testid="modal_overlay"
+    ></div>
+  );
 };
